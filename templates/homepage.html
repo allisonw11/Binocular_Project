@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}Events Homepage{% endblock %}
+
+{% block content %}
+<h1>Welcome To Event Homepage</h1>
+<div class="row">
+  {% if not session["user"] %}
+    <div class="col-12 col-md-3">
+      <h4>Log In:</h4>
+      <form action="/" method="POST">
+      <div>
+        <label class="form-label above" for="email">Email:</label>
+        <input type="text" name="email">
+      </div>
+
+      <div>
+        <label class="form-label above" for="password">Password:</label>
+        <input type="password" name="password">
+      </div>
+
+      <div class="row mt3">
+        <div class="col-3">
+          <input type="submit">
+        </div>
+      </div>
+    
+      <a href="/new_account">Create New Account</a>
+      </form>    
+    </div>
+    
+  {% else %}
+    <div class="col-12 col-md-3">
+      <h4>Profile:</h4>
+        <div>
+          <label class="form-label above" for="greeting">Hello! (user)</label>
+        </div>
+    </div>
+    <div>
+      <input type="submit" value="Log Out">
+    </div>
+  {% endif %}
+
+  <div class="col-12 col-md-7">
+    <form action="/search">
+    <h4>Search For Events</h4>
+        <div class="row-2">
+          <label class="form-label above" for="search-keyword">Search Keyword</label>
+          <input id="search-keyword" class="form-control" type="text" name="keyword">
+        </div>
+
+        <div class="row">
+          <div class="col-4">
+            <label class="form-label above" for="search-zip">Zip Code</label>
+              <input id="search-zip" class="form-control" type="text" name="zipcode">
+          </div>
+
+          <div class="col-4">
+            <label class="form-label above" for="search-radius">Distance Radius</label>
+              <input id="search-radius" class="form-control" type="number" name="radius">
+          </div>
+
+          <div class="col-4">
+            <label class="form-label above" for="search-unit">Unit</label>
+              <select class="form-control form-select" name="unit">
+                <option value="miles">miles</option>
+                <option value="km">kilometers</option>
+              </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="above" for="search-sort-by">Sort by</label>
+          <select id="search-sort-by" class="form-control form-select" name="sort">
+            <option value="date,asc">Date</option>
+            <option value="relevance,asc">Relevance</option>
+          </select>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-3">
+            <input type="submit" value="Search">
+          </div>
+        </div>
+    </form> 
+  </div>
+
+</div>
+<script src="static/homepage.js"></script>
+{% endblock %}
