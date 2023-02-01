@@ -2,7 +2,7 @@
 # import db and connet class tables here from model.py
 # UPDATE class tables HERE --->
 
-from model import db, User, connect_to_db
+from model import db, User, Event, connect_to_db
 
 
 # This connects to the database when run curd.py interactively 

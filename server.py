@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, flash, session, redirect
 from model import connect_to_db, db
 from pprint import pformat
 from jinja2 import StrictUndefined
+import requests
 import crud
 import os
 
@@ -16,6 +17,7 @@ def homepage():
     """View Homepage."""
     
     return render_template("homepage.html")
+
 
 
 @app.route("/", methods=["POST"])
@@ -34,12 +36,21 @@ def log_in():
         flash("Error! Please create a new account.")
     return redirect("/")
 
+
+
+@app.route("/")
+def log_out():
+    """Log-out a user. 2.0 features"""
+pass
+    
+
     
 @app.route("/new_account")
 def create_account():
     """View create account page."""
 
     return render_template("new_account.html")
+
 
 
 @app.route("/new_account", methods=["POST"])
@@ -53,6 +64,18 @@ def creat_new_user():
     state = request.form.get("states")
     zipcode = request.form.get("zipcode")
     
+    # Add conditionals here when want flashing msg display at top of new_account.html page
+    if len(email)<6:
+        flash("Email is not a valid address.")
+    elif len(fname)<2:
+        pass
+    else:
+        # add user.crud...
+        # add db.session.add(user here!)
+        # add db.session.commit()
+        # flash msg "create new account"
+        pass
+        
     user = crud.create_user(fname,lname,email,password,address,state,zipcode)
     
     db.session.add(user)
@@ -64,6 +87,7 @@ def creat_new_user():
     else:
         flash("Something is missing. Try again!")
         return render_template("new_account.html")
+
 
 
 @app.route("/user_profile")
@@ -79,41 +103,61 @@ def user_profile():
         return redirect("/")
 
 
+
 @app.route("/search")
 def all_events_result():
-    """View all events using Ticketmaster."""
+    """Find all events using Ticketmaster."""
 
-    keyword = request.args.get('keyword', '')
-    postalcode = request.args.get('zipcode', '')
-    radius = request.args.get('radius', '')
-    unit = request.args.get('unit', '')
-    sort = request.args.get('sort', '')
+    keyword = request.args.get("keyword", "")
+    postalCode = request.args.get("zipcode", "")
+    radius = request.args.get("radius", "")
+    sort = request.args.get("sort", "")
 
-    url = 'https://app.ticketmaster.com/discovery/v2/events'
+    # This url is limited to USA events only
+    url = "https://app.ticketmaster.com/discovery/v2/events.json?countryCode=US"
     payload = {
-        'apikey': TICKETMASTER_KEY,
-        'keyword': keyword,
-        'postalcode': postalcode,
-        'radius': radius,
-        'unit': unit,
-        'sort': sort,
+        "apikey": TICKETMASTER_KEY,
+        "keyword": keyword,
+        "postalCode": postalCode,
+        "radius": radius,
+        "unit": "miles",
+        "sort": sort,
         }
-    res = request.get(url, params=payload)
+    # add if statement here to make user who fill in radius must add in zipcode too, flash msg to redirect
+
+    res = requests.get(url, params=payload)
     data = res.json()
-    events = data['_embedded']['events']
     
-    return render_template('search_results.html',
+    if "_embedded" in data:
+        print("yes _embedded in data")
+        events = data["_embedded"]["events"]
+        return render_template("search_results.html",
                            pformat=pformat,
                            data=data,
                            results=events)
+    else:
+        flash("need msg")
+        return redirect("/")
     
-@app.route("/search/<event_id>")
-def show_event(event_id):
-    """Show details on a specific event."""
     
-    event = crud.get_event_by_id(event_id)
+@app.route("/event/<id>")
+def show_event(id):
+    """View the details on a specific event."""
     
-    return render_template("event_details.html", event=event)
+    url = f"https://app.ticketmaster.com/discovery/v2/events/{id}"
+    id_payload = {
+        "apikey" : TICKETMASTER_KEY,
+    }
+    res = requests.get(url, params=id_payload)
+    data = res.json()
+    
+    if "_embedded" in data:
+        event = data["_embedded"]["venues"]
+    else:
+        event = []
+
+    return render_template("event_details.html", pformat=pformat, data=data, event=event)
+
 
 
 if __name__ == "__main__":

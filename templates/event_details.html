@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Event Detail | {{ data["name"] }}{% endblock %}
+
+{% block content %}
+<!--
+TESTING DATA:
+<div id="results-as-json">
+    <h2>Results as JSON</h2>
+    <pre>{{ pformat(data) }}</pre>
+</div>
+-->
+<h2>Event Name: {{ data["name"] }}</h2>
+    <img src={{ data["images"][4]["url"] }}>
+    <p>Event Description:</br>
+        {% if "description" in data %}
+            {{ data["description"] }}
+        {% elif "info" in data %}
+            {{ data["info"] }}
+        {% else %}
+            No desciption available.
+        {% endif %}
+    </p>
+
+    <p>Event Genre:</br>
+            {% if "classifications" in data %}
+                {{ data["classifications"][0]["genre"]["name"] }}
+            {% else %}
+                Undefined.
+            {% endif %}
+    </p>
+
+    <p>Event Start Date:</br> 
+        {{ data["dates"]["start"]["localDate"] }} at {{ data["dates"]["start"]["localTime"]}}
+    </p>
+
+    <p>Event Location:</br> 
+        {{ event[0]["name"] }}
+    </p>
+
+    {% if "seatmap" in data %}
+        <p>Seat Map: <img src={{ data["seatmap"]["staticUrl"] }}></p>
+    {% endif %}
+    
+    <p>Event Address: {{ event[0]["address"]["line1"] }}, {{ event[0]["city"]["name"] }}, {{ event[0]["state"]["name"] }} {{ event[0]["postalCode"]}}</p>
+    
+    {% if "priceRanges" in data %}
+        <p>Price Range(*not including tax and fees): ${{ data["priceRanges"][0]["min"] }} - ${{ data["priceRanges"][0]["max"] }}
+    {% endif %}
+    
+    <p>Purchase Event Ticket: <a href={{ data["url"] }} target="_blank">HERE</a></p>
+    
+    <p>For More Information/Questions: </br>
+        {% if "ada" in data %}
+            {{ event[0]["ada"]["adaCustomCopy"] }}
+        {% elif "pleaseNote" in data %}
+            {{ data["pleaseNote"] }}
+        {% elif "outlets" in data %}
+            Visit <a href={{ data["outlets"][0]["url"] }}>{{ data["outlets"][0]["url"] }}</a>
+        {% else %}
+            Not available.
+        {% endif %}
+    </p>
+        
+
+
+============================================
+<p>Create review:AJAX?</p>
+<p>review/rating:()</p>
+<p>rank reviews by highest rating/lowest rating/most recent date</p>
+
+<div>google map on right hand side (Bootstrap)</div>
+<p>Return to search_results.html page? Will info save?</p>
+{% endblock %}

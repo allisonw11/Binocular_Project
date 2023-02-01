@@ -1,12 +1,45 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block title %}Events Search Results{% endblock %}
 
 {% block content %}
-<h1>Display search results.</h1>
-<a href="/">Return to Homepage</a>
+<!--
+JSON data visulization
+    <div id="results-as-json">
+        <h2>Results as JSON</h2>
+        <pre>{{ pformat(data) }}</pre>
+    </div>
+  -->
 <p>Google Map Box right hand side? or center. Add tracker?</p>
-<p>Events Names...</p>
-<p>Page Number? (20 per page? or better to list all)</p>
+
+    <h1>Display Search Results</h1>
+    <a href="/">Return to Homepage</a>
+    <p>
+        <span id="result-count">
+        {{ data["page"]["totalElements"] }}
+        </span>
+    Events matched your search.
+    </p>
+
+<!--type="1" will count event # starting from 1-->
+    <ol type="1" class="events-list">
+        {% for event in results %}
+          <li>
+            {{ event["dates"]["start"]["localDate"]}}
+            <a href="/event/{{ event["id"] }}" target="_blank">
+              {{ event["name"] }}
+            </a>
+          </li>
+        {% endfor %}
+    </ol>   
+
+
+  {% if "page" in data %}
+  <ol type="1" class="pages-list">
+    Page:<a href="{{ data["_links"]["next"]["href"] }}"> {{ data["page"]["number"] }}
+  </ol>
+  <!-- Previous Current Next options, use AJAX-->
+  {% endif %}
+
 
 {% endblock %}
