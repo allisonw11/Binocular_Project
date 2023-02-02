@@ -129,7 +129,7 @@ def all_events_result():
     data = res.json()
     
     if "_embedded" in data:
-        print("yes _embedded in data")
+        # print("yes _embedded in data")
         events = data["_embedded"]["events"]
         return render_template("search_results.html",
                            pformat=pformat,
@@ -138,7 +138,32 @@ def all_events_result():
     else:
         flash("need msg")
         return redirect("/")
+    # create new page when there is ZERO result? instead of redirect?
+
+
+@app.route("/search/next_page", methods=["POST"])
+def next_page():
+    url = request.json.get("url")
+    payload = {"apikey": TICKETMASTER_KEY}
+    next_page_url = requests.get("https://app.ticketmaster.com"+url,params=payload)
+    data = next_page_url.json()
+    return redirect("/search", data=data)
+
+
+@app.route("/search/<page>")
+def change_page(page):
+    url = "https://app.ticketmaster.com/discovery/v2/events.json?countryCode=US"
+    payload = {
+        "apikey":TICKETMASTER_KEY,
+        "keyword": keyword,
+        "postalCode": postalCode,
+        "radius": radius,
+        "unit": "miles",
+        "sort": sort,
+        "page":page
+        }
     
+
     
 @app.route("/event/<id>")
 def show_event(id):
