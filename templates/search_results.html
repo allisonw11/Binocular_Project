@@ -3,13 +3,13 @@
 {% block title %}Events Search Results{% endblock %}
 
 {% block content %}
-
+<!--
 JSON data visulization
     <div id="results-as-json">
         <h2>Results as JSON</h2>
         <pre>{{ pformat(data) }}</pre>
     </div>
-
+  -->
 <p>Google Map Box right hand side? or center. Add tracker?</p>
 
     <h1>Display Search Results</h1>
@@ -33,16 +33,18 @@ JSON data visulization
         {% endfor %}
     </ol>   
 
-
-  {% if "page" in data %}
-  <ol type="1" class="pages-list">
-    Page<button onclick="nextBtn('{{ data["_links"]["next"]["href"] }}')"> Next</button>
-  </ol>
-  
+    {% if "page" in data %}
+      {% if data.page.number > 0 %}
+        <button onclick="changePage('{{ +data.page.number - 1 }}')">Previous Page</button>
+      {% endif %}
+      
+      {% if data.page.number + 1 < data.page.totalPages %}
+        <button onclick="changePage('{{ +data.page.number + 1 }}')">Next Page</button>
+      {% endif %}
+    {% endif %}
+    
   <!-- Implement AJAX-->
-  <script src="/static/js/page_num.js"></script>
-  
-  {% endif %}
+  <script src="/static/js/change_page.js"></script>
 
 
 {% endblock %}

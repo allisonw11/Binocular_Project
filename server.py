@@ -112,8 +112,9 @@ def all_events_result():
     postalCode = request.args.get("zipcode", "")
     radius = request.args.get("radius", "")
     sort = request.args.get("sort", "")
+    page = request.args.get("page",0)
 
-    # This url is limited to USA events only
+    # Url limited to USA only
     url = "https://app.ticketmaster.com/discovery/v2/events.json?countryCode=US"
     payload = {
         "apikey": TICKETMASTER_KEY,
@@ -122,14 +123,15 @@ def all_events_result():
         "radius": radius,
         "unit": "miles",
         "sort": sort,
+        "page": page
         }
-    # add if statement here to make user who fill in radius must add in zipcode too, flash msg to redirect
+    # add if statement here using radius must add in zipcode too, flash msg to redirect
+
 
     res = requests.get(url, params=payload)
     data = res.json()
     
     if "_embedded" in data:
-        # print("yes _embedded in data")
         events = data["_embedded"]["events"]
         return render_template("search_results.html",
                            pformat=pformat,
@@ -138,31 +140,7 @@ def all_events_result():
     else:
         flash("need msg")
         return redirect("/")
-    # create new page when there is ZERO result? instead of redirect?
 
-
-@app.route("/search/next_page", methods=["POST"])
-def next_page():
-    url = request.json.get("url")
-    payload = {"apikey": TICKETMASTER_KEY}
-    next_page_url = requests.get("https://app.ticketmaster.com"+url,params=payload)
-    data = next_page_url.json()
-    return redirect("/search", data=data)
-
-
-@app.route("/search/<page>")
-def change_page(page):
-    url = "https://app.ticketmaster.com/discovery/v2/events.json?countryCode=US"
-    payload = {
-        "apikey":TICKETMASTER_KEY,
-        "keyword": keyword,
-        "postalCode": postalCode,
-        "radius": radius,
-        "unit": "miles",
-        "sort": sort,
-        "page":page
-        }
-    
 
     
 @app.route("/event/<id>")

@@ -37,14 +37,11 @@ class Event(db.Model):
     
     event_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     event_title = db.Column(db.String, nullable=False)
-    # Look up what images will have in model.py
-    event_img = db.Column(db.String, nullable=False)
     event_description = db.Column(db.Text, nullable=False)
     event_date = db.Column(db.DateTime, nullable=False)
     event_location = db.Column(db.String, nullable=False)
     
     
-    # reviews = db.relationship("Review", back_populates="events")
     # Do we need a relationship between Event --->User?
     users = db.relationship("User", back_populates="events") 
     
@@ -53,18 +50,23 @@ class Event(db.Model):
     
     
     
-# class Review(db.Model):
-#     """An review."""
-#     __tablename__ = "reviews"
+class Review(db.Model):
+    """An review."""
+    __tablename__ = "reviews"
     
-#     review_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    review_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    rating_score = db.Column(db.Integer, nullable=False)
+    review_title = db.Column(db.String(50), nullable=False)
+    review_description = db.Column(db.Text, nullable=False)
+    review_date = db.Column(db.DateTime, nullable=False)
+    review_recommend = db.Column(db.Boolean, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
     
-    
-#     users = db.relationship("User", back_populates="reviews")
-#     events = db.relationship("Event", back_populates="reviews") 
+    users = db.relationship("User", back_populates="reviews")
+    events = db.relationship("Event", back_populates="reviews") 
 
-#     def __repr__(self):
-#         return f"<User review_id={self.review_id}>"
+    def __repr__(self):
+        return f"<Review review_id={self.review_id} rating={self.rating_score}>"
 
 
 
