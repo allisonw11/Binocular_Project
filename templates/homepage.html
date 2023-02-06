@@ -20,7 +20,7 @@
 
       <div class="row mt3">
         <div class="col-3">
-          <input type="submit">
+          <input type="submit" value="Log In">
         </div>
       </div>
     
@@ -30,13 +30,14 @@
     
   {% else %}
     <div class="col-12 col-md-3">
-      <h4>Profile:</h4>
-        <div>
-          <label class="form-label above" for="greeting">Hello! (user)</label>
-        </div>
-        <div>
-          <input type="submit" value="Log Out">
-        </div>
+      <form action="/logout" method="POST">
+        <h4>Profile:</h4>
+          <div>
+            <label class="form-label above" for="greeting">Hello! {{ "fname" }}</label>
+          </div>
+          <div>
+            <input type="submit" value="Log Out">
+          </div>
     </div>
   {% endif %}
 
@@ -81,5 +82,5 @@
   </div>
 
 </div>
-<script src="static/homepage.js"></script>
+
 {% endblock %}

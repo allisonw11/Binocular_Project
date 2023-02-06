@@ -24,9 +24,7 @@ def login_user(email, password):
     
     current_id = User.query.filter(User.email == email).first()
     
-    # If current_id
     # Check if password is correct for current_id
-            # Return user_id
     if current_id:
         if current_id.password == password:
             return current_id.user_id    
@@ -37,6 +35,34 @@ def get_user_by_id(user_id):
     """Access user's info using it's id."""
     
     return User.query.get(user_id)
+
+
+def create_event(event_title, event_genre, event_date, event_zipcode):
+    """Create and return an event."""
+    event = Event(event_title=event_title,
+                  event_genre=event_genre, 
+                  event_date=event_date, 
+                  event_zipcode=event_zipcode)
+    return event
+
+
+def create_review(user, event, rating_score, review_title, review_description,review_recommend, review_date):
+    """Create and return a new review."""
+    review = Review(user=user,
+                    event=event,
+                    rating_score=rating_score, 
+                    review_title=review_title, 
+                    review_description=review_description,
+                    review_recommend=review_recommend, 
+                    review_date=review_date)
+    return review
+
+
+def get_review_by_userid(user_id):
+    """Access all review created by user using it's user_id.""" 
+
+    return Review.query.get(Review.user_id==user_id).all()  
+    # Should I replace .get --> filter_by?
 
 if __name__ == '__main__':
     from server import app

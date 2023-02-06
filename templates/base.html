@@ -13,20 +13,22 @@
 <body>
   <div class="container-fluid">
     <!--Row on top of the webpage-->
-  <div class="row">
-    <div class="col-2">
-      <a href="/">Homepage</a>
-    </div>
-    {% if "user" in session %}
-    <div class="col-2">
-      <a href="/user_profile">My Profile</a>
-    </div>
-    <div class="col-2">
-      <a href="/my_reviews">My Reviews</a>
-    </div>
-    {% endif %}
+    <div class="row">
+      <div class="col-2">
+        <a href="/">Homepage</a>
+      </div>
+      
+      {% if "user" in session %}
+        <div class="col-2">
+          <a href="/user_profile">My Profile</a>
+        </div>
+        
+        <div class="col-2">
+          <a href="/view_user_reviews">My Reviews</a>
+        </div>
+      {% endif %}
   </div>
-    {% block content %}BODY CONTENT of base.html{% endblock %}
+  {% block content %}BODY CONTENT of base.html{% endblock %}
 
   <div>-----------------Footer--------------------------------------</div>
   

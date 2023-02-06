@@ -1,56 +1,69 @@
 """Script to seed database.""" 
-# import os
-# import json
+import os
+import json
+from random import choice, randint
+from datetime import datetime
+import crud
+import model
+import server
 
-# from datetime import datetime
-
-# import crud
-# import model
-# import server
-
-# model.connect_to_db(server.app)
-# model.db.create_all()
-
-# # Create a fake user for testing:
-# email = "user@test.com"
-# password = "test"
-
-# user = crud.create_user(email, password)
-
-# model.db.session.add(user)
-# model.db.session.commit()
+os.system("dropdb eventsLocator")
+os.system("createdb eventsLocator")
+model.connect_to_db(server.app)
+server.app.app_context().push()
+model.db.create_all()
 
 
-
-# # EXAMPLE from movie rating app --->
-# os.system("dropdb ratings")
-
-# # This will re-creating a database is run dropdb and createdb automatically
-# os.system("createdb ratings")
-
-# # This will connect to the database and call db.create_all
-# model.connect_to_db(server.app)
-# model.db.create_all()
-
-# # This will load data from data/movies.json and save it to a variable
-# with open('data/movies.json') as f:
-#     movie_data = json.loads(f.read())
+with open('data/events.json') as f:
+    event_data = json.loads(f.read())
     
-# # Create movies, store them in list so we can use them
-# # to create fake ratings later
-# movies_in_db = []
-# for movie in movie_data:
-#     # TODO: 
-#     # Get the title, overview, and poster_path from the movie dictionary.
-#     title, overview, poster_path = (movie["title"], movie["overview"], movie["poster_path"])
-#     # Then, get the release_date and convert it to datetime object with datetime.strptime
-#     release_date = datetime.strptime(movie["release_date"], "%Y-%m-%d")
+events_in_db = []
+events = event_data["_embedded"]["events"]
+
+for event in events:
+    event_title = event["name"]
+    event_genre = event["classifications"][0]["genre"]["name"]
+    event_date = datetime.strptime(event["dates"]["start"]["localDate"], "%Y-%m-%d")
+    if "place" in event:
+        event_zipcode = event['place']['postalCode']
+    else:
+        event_zipcode = event['_embedded']["venues"][0]["postalCode"]
+
     
-#     # TODO: create a movie here and append it to movies_in_db
-#     db_movie = crud.create_movie(title, overview, release_date, poster_path)
-#     movies_in_db.append(db_movie)
+    # Create a movie here and append it to movies_in_db
+    db_event = crud.create_event(event_title, event_genre, event_date, event_zipcode)
+    events_in_db.append(db_event)
 
-# model.db.session.add_all(movies_in_db)
-# model.db.session.commit()
+model.db.session.add_all(events_in_db)
+model.db.session.commit()
 
-# # <--- END of EXAMPLE
+
+
+# Create 3 users and each user will make 5 reviews for testing:
+for n in range(3):
+    fname = "User"
+    lname = f"{n}"
+    email = f"user{n}@test.com"
+    password = "test"
+    address = f"123{n} Main Street"
+    state = "HI"
+    zipcode = "96701"
+    
+    # Create a user and add to User db
+    user = crud.create_user(fname, lname, email, password, address, state, zipcode)    
+    model.db.session.add(user)
+
+    # Create 5 reviews for the user
+    for _ in range(5):
+        random_event = choice(events_in_db)
+        rating_score = randint(1, 5)
+        review_title = f"Title by User{n}"
+        review_description = f"Reviewed by User{n}"
+        review_recommend = choice([True,False])
+        review_date = "2023-02-28"
+
+        review = crud.create_review(user, random_event, rating_score, review_title, review_description, review_recommend, review_date)
+        model.db.session.add(review)
+
+model.db.session.commit()
+

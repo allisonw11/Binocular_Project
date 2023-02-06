@@ -70,11 +70,40 @@ TESTING DATA:
     </p>
         
 ============================================
+    <form action="/event/<id>/review" method="POST">
+        <p>Create review:AJAX? (right col=6 , Bootstrap)</p>
+        <div>
+            <label class="form-label above" for="rating">Rating: (1-5 stars)</label>
+            <input id="rating-score" class="form-control" type="text" name="rating" placeholder="Enter rating (1-5)"> 
+            <!--Add CSS for stars HERE-->
+        </div>
+        
+        <div>
+            <label class="form-label above" for="review-title">Review Title:</label>
+            <input id="review-title" class="form-control" type="text" name="title" placeholder="Enter the title for this review"> 
+        </div>
+        
+        <div>
+            <label class="form-label above" for="review-description">Review:</label>
+            <textarea id="review-description" class="form-control" type="text" name="review" rows="5" cols="50" placeholder="Enter review here"></textarea>
+        </div>
+        
+        <div>
+            <label class="form-label above" for="recommendation">Would you recommend this event to others?</label>
+                <input type="radio" id="yes-no" name="recommendation" value="yes">
+                    <label for="yes">Yes</label>
+                <input type="radio" id="yes-no" name="recommendation" value="no">
+                    <label for="no">No</label>
+        </div>
+        
+        <div class="col-3">
+            <input type="submit" value="Submit Review">
+        </div>
+    </form>
 
-<p>Create review:AJAX?</p>
-<p>review/rating:()</p>
-<p>rank reviews by highest rating/lowest rating/most recent date</p>
+    <p>Reviews: (Left, col=6) + Rank reviews by highest rating/lowest rating/most recent date(2.0/3.0)</p>
 
 <div>google map on right hand side (Bootstrap)</div>
-<p>Return to search_results.html page? Will info save?</p>
+
+<script src = '/static/js/add_review.js'></script>
 {% endblock %}

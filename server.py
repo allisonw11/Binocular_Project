@@ -6,6 +6,7 @@ from jinja2 import StrictUndefined
 import requests
 import crud
 import os
+import datetime
 
 app = Flask(__name__)
 app.secret_key = "dev"
@@ -23,12 +24,11 @@ def homepage():
 @app.route("/", methods=["POST"])
 def log_in():
     """Log-in a user."""
-    # Handle submission of the login form at homepage
+    # Handle POST form submission of the login at homepage
     email = request.form.get("email")
     password = request.form.get("password")
-    
     user = crud.login_user(email, password)
-    
+
     if user:
         session["user"] = user
         flash("You are successfully logged in.")
@@ -38,10 +38,11 @@ def log_in():
 
 
 
-@app.route("/")
+@app.route("/logout", methods=["POST"])
 def log_out():
-    """Log-out a user. 2.0 features"""
-pass
+    """Log-out a user."""
+    session.clear()
+    return redirect("/")
     
 
     
@@ -66,7 +67,9 @@ def creat_new_user():
     
     # Add conditionals here when want flashing msg display at top of new_account.html page
     if len(email)<6:
+        # Make sure each email is unique with NO DUPLICATION!!!
         flash("Email is not a valid address.")
+        
     elif len(fname)<2:
         pass
     else:
@@ -86,6 +89,7 @@ def creat_new_user():
         return redirect("/user_profile", user=user)
     else:
         flash("Something is missing. Try again!")
+        # flash msg should based on the missing info/conditionals from above
         return render_template("new_account.html")
 
 
@@ -130,6 +134,10 @@ def all_events_result():
 
     res = requests.get(url, params=payload)
     data = res.json()
+    # out_file = open("events.json", "w")
+    # import json
+    # json.dump(data, out_file)
+    # out_file.close()
     
     if "_embedded" in data:
         events = data["_embedded"]["events"]
@@ -162,6 +170,49 @@ def show_event(id):
     return render_template("event_details.html", pformat=pformat, data=data, event=event)
 
 
+
+@app.route("/event/<id>/review")
+def add_review():
+    """Add review within an event page."""
+    # Want to use AJAX here
+    user_id = request.args.get("user_id")
+    event_id = request.args.get("event_id")
+    rating_score = request.args.get("rating_score", "")
+    review_title = request.args.get("review_title", "")
+    review_description = request.args.get("review_description", "")
+    review_recommend = request.args.get("review_recommend", "")
+    review_date = datetime.now()
+    
+    review = crud.create_review(user_id, rating_score, review_title, review_description, review_recommend, review_date)
+    
+    db.session.add(review)
+    db.session.commit()
+    flash("Successfully added a review.")
+    
+    return redirect("/event/<id>",
+                    user_id=user_id,
+                    event_id=event_id, 
+                    rating_score=rating_score, 
+                    review_title=review_title, 
+                    review_description=review_description,
+                    review_recommend=review_recommend,
+                    review_date=review_date)
+
+
+
+@app.route("/view_user_reviews")
+def view_review():
+    """View individuals user's review(s)."""
+
+    user = crud.get_user_by_id(session["user"])
+    if "user" in session:
+        # user_id = crud.get_user_by_id(user)
+        # Need to fix by retriving user_id
+        all_reviews = crud.get_review_by_userid(user_id)
+    
+    return render_template("user_reviews.html", user=user, all_reviews=all_reviews)
+    
+    
 
 if __name__ == "__main__":
     connect_to_db(app)

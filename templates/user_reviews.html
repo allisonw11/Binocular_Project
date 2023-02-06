@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}My Reviews{% endblock %}
+
+{% block content %}
+<h1>{{ user.fname +" "+ user.lname }}'s Reviews:</h1>
+
+<h4>My Reviews:</h4>
+    {% for review in all_reviews %}
+        {% if review not in reviews %}
+            No written review yet.
+        {% else %}
+            <ol type="1" class="review-list">
+                <div>
+                    Date: {{ review.date}}
+                    Title: {{ review.title}}
+                    Event Score: {{ review.rating_score }}
+                    Description: {{ review.description }}
+                    Recommendation: {{ review.recommend }}
+                </div>
+            </ol>
+        {% endif %}
+    {% endfor %}
+
+{% endblock %}
