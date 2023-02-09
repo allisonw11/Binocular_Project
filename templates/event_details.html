@@ -1,16 +1,22 @@
 {% extends "base.html" %}
+    {% block head %}
+    <title>Demo: Google Maps</title>
+    <style>
+        html, body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        }
+        .map,
+        #map {
+        width: 100%;
+        height: 100%;
+        }
+    </style>
+    {% endblock %}
 
-{% block title %}Event Detail | {{ data["name"] }}{% endblock %}
-
-{% block content %}
-<!--
-TESTING DATA:
-<div id="results-as-json">
-    <h2>Results as JSON</h2>
-    <pre>{{ pformat(data) }}</pre>
-</div>
--->
-<h2>Event Name: {{ data["name"] }}</h2>
+    {% block content %}
+    <h2>Event Name: {{ data["name"] }}</h2>
     <img src={{ data["images"][4]["url"] }}>
     <p>Event Description:</br>
         {% if "description" in data %}
@@ -23,11 +29,11 @@ TESTING DATA:
     </p>
 
     <p>Event Genre:</br>
-            {% if "classifications" in data %}
-                {{ data["classifications"][0]["genre"]["name"] }}
-            {% else %}
-                Undefined.
-            {% endif %}
+        {% if "classifications" in data %}
+            {{ data["classifications"][0]["genre"]["name"] }}
+        {% else %}
+            Undefined.
+        {% endif %}
     </p>
 
     <p>Event Start Date:</br> 
@@ -39,7 +45,7 @@ TESTING DATA:
     </p>
 
     {% if "seatmap" in data %}
-        <p>Seat Map: <img src={{ data["seatmap"]["staticUrl"] }}></p>
+    <p>Seat Map: <img src={{ data["seatmap"]["staticUrl"] }}></p>
     {% endif %}
     
     <p>
@@ -56,7 +62,7 @@ TESTING DATA:
         Or <a href={{ data["outlets"][0]["url"] }}>Box Office Site</a>
         {% endif %}
     </p>
-    
+
     <p>For More Information/Questions: </br>
         {% if "ada" in data %}
             {{ event[0]["ada"]["adaCustomCopy"] }}
@@ -68,14 +74,16 @@ TESTING DATA:
             Not available.
         {% endif %}
     </p>
-        
-============================================
+
+    ============================================
+    <p> {{ event_id }} </p>
     <form action="/event/<id>/review" method="POST">
-        <p>Create review:AJAX? (right col=6 , Bootstrap)</p>
+        <input type="hidden" id="event-id" name="event-id" value={{ event_id }}>
+        <p>Create review: (right col=6 , Bootstrap)</p>
         <div>
             <label class="form-label above" for="rating">Rating: (1-5 stars)</label>
             <input id="rating-score" class="form-control" type="text" name="rating" placeholder="Enter rating (1-5)"> 
-            <!--Add CSS for stars HERE-->
+            <!--Add CSS stars HERE-->
         </div>
         
         <div>
@@ -97,13 +105,22 @@ TESTING DATA:
         </div>
         
         <div class="col-3">
-            <input type="submit" value="Submit Review">
+            <input type="submit" value="Submit Review" id="submit">
         </div>
     </form>
 
-    <p>Reviews: (Left, col=6) + Rank reviews by highest rating/lowest rating/most recent date(2.0/3.0)</p>
-
-<div>google map on right hand side (Bootstrap)</div>
-
-<script src = '/static/js/add_review.js'></script>
-{% endblock %}
+    <p>Show Reviews: (Bootstrap;Left, col=6) + Rank reviews by highest rating/lowest rating/most recent date(2.0/3.0)</p>
+    
+    <div>
+        <h4>Map! (right hand side on page; Bootstrap)</h4>
+        <section class="map">
+            <div id="map"></div>
+        </section>
+    </div>
+    <script src="/static/js/add_review.js"></script>
+    <script src="/static/js/gMap.js"></script>
+    <script
+      async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByH1t-H-7MgU-yqWU2hCAOBIDHDeQjop4&callback=initMap">
+    </script>
+    {% endblock %}

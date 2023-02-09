@@ -21,8 +21,6 @@ class User(db.Model):
     zipcode = db.Column(db.Integer, nullable=False)
     
     
-    
-    # create relationship here, if any--->
     reviews = db.relationship("Review", back_populates="user")
 
     # function that auto return needed info when called
@@ -31,17 +29,17 @@ class User(db.Model):
         
         
         
-# # ENTER MORE CLASS HERE ----->
 class Event(db.Model):
     """An event."""
     __tablename__ = "events"
     
-    event_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    event_id = db.Column(db.String, primary_key=True)
     event_title = db.Column(db.String, nullable=False)
     event_genre = db.Column(db.String, nullable=False)
     event_date = db.Column(db.DateTime, nullable=False)
     event_zipcode = db.Column(db.Integer, nullable=False)
-    
+    event_lat = db.Column(db.Float, nullable=False)
+    event_lng = db.Column(db.Float, nullable=False)
     
     reviews = db.relationship("Review", back_populates="event")
     
@@ -60,9 +58,10 @@ class Review(db.Model):
     review_description = db.Column(db.Text, nullable=False)
     review_recommend = db.Column(db.Boolean, nullable=False)
     review_date = db.Column(db.DateTime, nullable=False)
+    # edit_review_date = db.Column(db.DateTime, nullable=True)
     
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
-    event_id = db.Column(db.Integer, db.ForeignKey("events.event_id"), nullable=False)
+    event_id = db.Column(db.String, db.ForeignKey("events.event_id"), nullable=False)
     
     user = db.relationship("User", back_populates="reviews")
     event = db.relationship("Event", back_populates="reviews") 

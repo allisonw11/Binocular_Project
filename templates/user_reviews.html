@@ -6,20 +6,27 @@
 <h1>{{ user.fname +" "+ user.lname }}'s Reviews:</h1>
 
 <h4>My Reviews:</h4>
-    {% for review in all_reviews %}
-        {% if review not in reviews %}
-            No written review yet.
-        {% else %}
-            <ol type="1" class="review-list">
+    {% if not reviews %}
+        No written reviews.
+    {% endif %}
+        {% for review in reviews %}
+            <li type="1" class="review-list">
                 <div>
-                    Date: {{ review.date}}
-                    Title: {{ review.title}}
-                    Event Score: {{ review.rating_score }}
-                    Description: {{ review.description }}
-                    Recommendation: {{ review.recommend }}
+                    Date: {{ review.review_date}}</br>
+                    Title: {{ review.review_title}}</br>
+                    Event Score: {{ review.rating_score }}</br>
+                    Description: {{ review.review_description }}</br>
+                    {% if review.review_recommend %}
+                        Recommendation: Yes
+                    {% else %}
+                        Recommendation: No
+                    {% endif %}
+                    
+                    <button type="button" class="close" onClick="deleteReview({{ review.review_id }})">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            </ol>
-        {% endif %}
+            </li>
     {% endfor %}
 
 {% endblock %}
