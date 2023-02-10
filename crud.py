@@ -66,15 +66,25 @@ def create_review(user_id, event_id, rating_score, review_title, review_descript
     return review
 
 
+def updated_review(user_id, event_id, rating_score, review_title, review_description,review_recommend):
+    """Update an existed review."""
+    updated_review = Review.query.filter(Review.event_id==event_id, Review.user_id==user_id).first()
+    updated_review.rating_score=rating_score
+    updated_review.review_title=review_title
+    updated_review.review_description=review_description
+    updated_review.review_recommend=review_recommend
+    return updated_review
+    
+    
 def get_review_by_userid(user_id):
-    """Access all review created by user using it's user_id.""" 
+    """Access all reviews created by user using it's user_id.""" 
 
     return Review.query.filter(Review.user_id==user_id).all()
 
-def get_review_by_reviewid(review_id):
-    """Access a review created by a user."""
-    return Review.query.get(review_id)
-# Do I need this function?
+def get_review_by_eventid(event_id):
+    """Access all reviews under an event id."""
+    
+    return Review.query.filter(Review.event_id==event_id).all()
 
 
 if __name__ == '__main__':

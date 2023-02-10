@@ -146,7 +146,8 @@ def all_events_result():
         return render_template("search_results.html",
                            pformat=pformat,
                            data=data,
-                           results=events)
+                           results=events
+                           )
     else:
         flash("need msg")
         return redirect("/")
@@ -166,7 +167,6 @@ def show_event(id):
     
     if "_embedded" in data:
         event = data["_embedded"]["venues"]
-        
     else:
         event = []
     
@@ -178,17 +178,20 @@ def show_event(id):
                                     data["dates"]["start"]["localDate"],
                                     event[0]["postalCode"],
                                     event[0]["location"]["latitude"],
-                                    event[0]["location"]["longitude"])
+                                    event[0]["location"]["longitude"]
+                                    )
         db.session.add(new_event)
         db.session.commit()
-    # write another crud fxn to get all reviews under this event or will be empty (conditionals if needed)
-    # pass it thru jinja templete
-    # should populate the reviews when refresh
+
+    reviews_in_event = crud.get_review_by_eventid(id)
+    
     return render_template("event_details.html",
                            event_id=id, 
                            pformat=pformat,
                            data=data, 
-                           event=event)
+                           event=event,
+                           reviews_in_event=reviews_in_event
+                           )
 
 
 
@@ -197,81 +200,56 @@ def add_review(id):
     """Add review within an event page."""
     
     event_id = request.form.get("event-id")
-    print(event_id)
     rating_score = request.form.get("rating", "")
-    print(rating_score)
     review_title = request.form.get("title", "")
-    print(review_title)
     review_description = request.form.get("review", "")
-    print(review_description)
     review_recommend = request.form.get("recommendation", "")
     
     if review_recommend == "yes":
         review_recommend = True
     else:
         review_recommend = False
-    print(review_recommend)
     current_date = datetime.now()
-    review_date = current_date.strftime("%m/%d/%Y %H:%M")
-    # check if event_id in db, session.add if is not
+    review_date = current_date.strftime("%m/%d/%Y")
 
-    
     review = crud.create_review(session["user"],
                                 event_id, 
                                 rating_score, 
                                 review_title, 
                                 review_description, 
                                 review_recommend, 
-                                review_date)
+                                review_date
+                                )
     db.session.add(review)
     db.session.commit()
     flash("Successfully added a review.")
     
     return redirect(f"/event/{event_id}")
-                    # event_id=event_id, 
-                    # rating_score=rating_score, 
-                    # review_title=review_title, 
-                    # review_description=review_description,
-                    # review_recommend=review_recommend,
-                    # review_date=review_date
                     
 
 
-
-# @app.route("/edit_review")
-# def edit_review():
-#     """Edit a previously written review."""
-#     user_id = request.args.get("user_id")
-#     event_id = request.args.get("event_id")
-#     rating_score = request.args.get("rating_score", "")
-#     review_title = request.args.get("review_title", "")
-#     review_description = request.args.get("review_description", "")
-#     review_recommend = request.args.get("review_recommend", "")
-#     review_date = request.args.get("review_date", "")
-#     edit_review_date = datetime.now()
-#     # Need the edit_review_date? Create new table in model.py?
-#     updated_review = crud.create_review(user_id, 
-#                                         rating_score, 
-#                                         review_title, 
-#                                         review_description, 
-#                                         review_recommend, 
-#                                         review_date, 
-#                                         edit_review_date)
+@app.route("/edit_review", methods=["POST"])
+def edit_review():
+    """Edit a previously written review by user."""
     
-#     db.session.add(updated_review)
-#     db.session.commit()
-#     flash("Successfully edited a review.")
-#     return redirect("/event/<id>",
-#                     user_id=user_id,
-#                     event_id=event_id, 
-#                     rating_score=rating_score, 
-#                     review_title=review_title, 
-#                     review_description=review_description,
-#                     review_recommend=review_recommend,
-#                     review_date=review_date,
-#                     edit_review_date=edit_review_date)
-# When editing a review, do I need too session add all data that are already exist?
-# Should it redirect to /event/<id> OR /event/<id>/review?
+    event_id = request.json.get("event_id")
+    rating_score = request.json.get("rating", "")
+    review_title = request.json.get("title", "")
+    review_description = request.json.get("review", "")
+    review_recommend = request.json.get("recommendation", "")
+    # edit_review_date = current_date.strftime("%m/%d/%Y") TODO LATER!
+    
+    updated_review = crud.updated_review(session["user"],
+                                         event_id,
+                                         rating_score, 
+                                         review_title, 
+                                         review_description, 
+                                         review_recommend, 
+                                        )
+    db.session.add(updated_review)
+    db.session.commit()
+    
+    return "Review has been updated."
 
 
 

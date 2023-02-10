@@ -76,8 +76,7 @@
     </p>
 
     ============================================
-    <p> {{ event_id }} </p>
-    <form action="/event/<id>/review" method="POST">
+    <form action="/event/<id>/review" id="review-form" method="POST">
         <input type="hidden" id="event-id" name="event-id" value={{ event_id }}>
         <p>Create review: (right col=6 , Bootstrap)</p>
         <div>
@@ -109,18 +108,68 @@
         </div>
     </form>
 
-    <p>Show Reviews: (Bootstrap;Left, col=6) + Rank reviews by highest rating/lowest rating/most recent date(2.0/3.0)</p>
+    <p>All Reviews: (Bootstrap;Left, col=6) + Rank reviews by highest rating/lowest rating/most recent date(2.0/3.0)</p>
+        {% if not reviews_in_event %}
+            <p>No written reviews. </p>
+        {% endif %}
+        {% for review in reviews_in_event %}
+            <li type="1" class="review-list" id="full-review">
+                <div>
+                    Written By: User {{ review.user_id }}</br>
+                    Date: {{ review.review_date }}</br>
+                    Title: <span id="title_{{ review.review_id }}">{{ review.review_title }}</span></br>
+                    Event Score: <span id="rating_{{ review.review_id }}">{{ review.rating_score }}</span></br>
+                    Description: <span id="description_{{ review.review_id }}">{{ review.review_description }}</span></br>
+                    <span id="recommend_{{ review.review_id }}">
+                    {% if review.review_recommend %}
+                        Recommendation: Yes
+                    {% else %}
+                        Recommendation: No
+                    {% endif %}
+                    </span>
+                    {% if session["user"]== review.user_id %}
+                    <button onClick="show_edit_form()">Edit</button>
+                    <div id="show-edit-form" hidden>
+                    <form id="edit-review-form" method="POST">
+                        <input type="hidden" id="edit-review-id" value={{ review.review_id }}>
+                        <input type="hidden" id="event-id" name="event-id" value={{ event_id }}>
+                                Edit Your Review:
+                            <div>
+                                <label class="form-label above" for="rating">Rating: (1-5 stars)</label>
+                                <input id="edit-rating-score" class="form-control" type="text" name="rating" placeholder="Enter rating (1-5)"> 
+                                <!--Add CSS stars HERE-->
+                            </div>
+                            <div>
+                                <label class="form-label above" for="review-title">Review Title:</label>
+                                <input id="edit-review-title" class="form-control" type="text" name="title" placeholder="Enter the title for this review"> 
+                            </div>
+                            <div>
+                                <label class="form-label above" for="review-description">Review:</label>
+                                <textarea id="edit-review-description" class="form-control" type="text" name="review" rows="5" cols="50" placeholder="Enter review here"></textarea>
+                            </div>
+                            <div>
+                                <label class="form-label above" for="recommendation">Would you recommend this event to others?</label>
+                                    <input type="radio" id="edit-yes-no" name="recommendation" value="true">
+                                        <label for="yes">Yes</label>
+                                    <input type="radio" name="recommendation" value="false">
+                                        <label for="no">No</label>
+                            </div>
+                            <div class="col-3">
+                                <input type="submit" value="Update" id="update-submit">
+                            </div>
+                    </form>
+                </div>
+                    {% endif %}
+                <div>
+        {% endfor %}
     
-    <div>
         <h4>Map! (right hand side on page; Bootstrap)</h4>
         <section class="map">
             <div id="map"></div>
         </section>
     </div>
-    <script src="/static/js/add_review.js"></script>
+
+    <script src="/static/js/edit_review.js"></script>
     <script src="/static/js/gMap.js"></script>
-    <script
-      async
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByH1t-H-7MgU-yqWU2hCAOBIDHDeQjop4&callback=initMap">
-    </script>
+    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByH1t-H-7MgU-yqWU2hCAOBIDHDeQjop4&callback=initMap"></script>
     {% endblock %}

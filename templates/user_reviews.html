@@ -12,10 +12,11 @@
         {% for review in reviews %}
             <li type="1" class="review-list">
                 <div>
-                    Date: {{ review.review_date}}</br>
-                    Title: {{ review.review_title}}</br>
-                    Event Score: {{ review.rating_score }}</br>
-                    Description: {{ review.review_description }}</br>
+                    Event: {{ review.event_id }}</br>
+                    Date: {{ review.review_date }}</br>
+                    Title: {{ review.review_title }}</br>
+                    Rating: {{ review.rating_score }}</br>
+                    Review Description: {{ review.review_description }}</br>
                     {% if review.review_recommend %}
                         Recommendation: Yes
                     {% else %}
