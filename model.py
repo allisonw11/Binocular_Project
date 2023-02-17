@@ -18,7 +18,7 @@ class User(db.Model):
     password = db.Column(db.String, nullable=False)
     address = db.Column(db.String, nullable=False)
     state = db.Column(db.String, nullable=False)
-    zipcode = db.Column(db.Integer, nullable=False)
+    zipcode = db.Column(db.String, nullable=False)
     
     
     reviews = db.relationship("Review", back_populates="user")
@@ -58,7 +58,6 @@ class Review(db.Model):
     review_description = db.Column(db.Text, nullable=False)
     review_recommend = db.Column(db.Boolean, nullable=False)
     review_date = db.Column(db.DateTime, nullable=False)
-    # edit_review_date = db.Column(db.DateTime, nullable=True)
     
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
     event_id = db.Column(db.String, db.ForeignKey("events.event_id"), nullable=False)

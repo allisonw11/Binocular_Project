@@ -3,23 +3,35 @@
 
 {% block content %}
 <h1> Create New Account </h1>
-    <h2> Please Enter Your Information Below:</h2>
-    <h3> All required fields are indicated with *</h3>
+    <h3> Please Enter Your Information Below:</h3>
+    <h4> All required fields are indicated with *</h4>
 <form action="/new_account" method="POST">
     <p>
-        * First Name: <input type="text" name="fname" placeholder="Enter first name">
+        * First Name: <input type="text" name="fname" placeholder="Enter first name" required>
     </p>
+
     <p>
-        * Last Name: <input type="text" name="lname" placeholder="Enter last name">
+        * Last Name: <input type="text" name="lname" placeholder="Enter last name" required>
     </p>
+
     <p>
-        * Email: <input type="text" name="email" placeholder="Enter email">
+        * Email: <input type="text" name="email" placeholder="Enter email address" required pattern="\w+@\w+\.\w+">
     </p>
+
     <p>
-        * Password: <input type="password" name="password" placeholder="Enter password">
+        * Password: <input type="password" id="password" name="password" placeholder="Enter password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" 
+        required>
+        <div id="psw-message">
+            <p>Password must contain the following:</p>
+                <p id="psw-letter" class="invalid">A <b>lowercase</b> letter</p>
+                <p id="psw-capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
+                <p id="psw-number" class="invalid">A <b>number</b></p>
+                <p id="psw-length" class="invalid">Minimum <b>8 characters</b></p>
+        </div>
     </p>
+    
     <p>
-        * Address: <input type="address" name="address" placeholder="Enter address">
+        * Address: <input type="address" name="address" placeholder="Enter address" required>
     </p>
     <label for="states">* Choose a state:</label>
         <select name="states" id="states">
@@ -75,13 +87,17 @@
             <option value="WI">Wisconsin</option>
             <option value="WY">Wyoming</option>
         </select>
+    
     <p>
-        * Zip Code: <input type="zipcode" name="zipcode" placeholder="Enter zipcode">
+        * Zip Code: <input type="zipcode" name="zipcode" placeholder="Enter zipcode" pattern="\d{5}" required>
     </p>
+    
     <p>
       <input type="submit">
     </p>
     Have an account? <a href="/">Log In Here</a>
   </form>
 
+
+  <script src="/static/js/create_acc.js"></script>
 {% endblock %}

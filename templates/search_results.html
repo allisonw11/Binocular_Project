@@ -21,12 +21,12 @@ JSON data visulization
     Events matched your search.
     </p>
 
-<!--type="1" will count event # starting from 1-->
+
     <ol type="1" class="events-list">
         {% for event in results %}
           <li>
             {{ event["dates"]["start"]["localDate"]}}
-            <a href="/event/{{ event["id"] }}" target="_blank">
+            <a href="/event/{{ event["id"] }}">
               {{ event["name"] }}
             </a>
           </li>
@@ -43,7 +43,6 @@ JSON data visulization
       {% endif %}
     {% endif %}
     
-  <!-- Implement AJAX-->
   <script src="/static/js/change_page.js"></script>
 
 

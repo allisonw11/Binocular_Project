@@ -1,6 +1,10 @@
 {% extends "base.html" %}
     {% block head %}
-    <title>Demo: Google Maps</title>
+    <link ref="stylesheet" href="/static/css/styles.css">
+    <title>
+        {{ data["name"] }}
+    </title>
+
     <style>
         html, body {
         margin: 0;
@@ -13,162 +17,188 @@
         height: 100%;
         }
     </style>
+
     {% endblock %}
 
     {% block content %}
-    <h2>Event Name: {{ data["name"] }}</h2>
-    <img src={{ data["images"][4]["url"] }}>
-    <p>Event Description:</br>
+    
+    <h2>{{ data["name"] }}</h2>
+    <button onclick="scrollTopFunction()" id="topBtn" title="Go to top">Top</button>
+        <img src={{ data["images"][4]["url"] }}>
+
         {% if "description" in data %}
-            {{ data["description"] }}
+            <p>Event Description:</br>
+            {{ data["description"] }}</p>
         {% elif "info" in data %}
-            {{ data["info"] }}
-        {% else %}
-            No desciption available.
+            <p>Event Description:</br>
+            {{ data["info"] }}</p>
         {% endif %}
-    </p>
 
-    <p>Event Genre:</br>
+        <p>Event Genre:</br>
         {% if "classifications" in data %}
-            {{ data["classifications"][0]["genre"]["name"] }}
+            {{ data["classifications"][0]["genre"]["name"] }}</p>
         {% else %}
-            Undefined.
+            Undefined.</p>
         {% endif %}
-    </p>
-
-    <p>Event Start Date:</br> 
-        {{ data["dates"]["start"]["localDate"] }} at {{ data["dates"]["start"]["localTime"]}}
-    </p>
-
-    <p>Event Location:</br> 
-        {{ event[0]["name"] }}
-    </p>
-
-    {% if "seatmap" in data %}
-    <p>Seat Map: <img src={{ data["seatmap"]["staticUrl"] }}></p>
-    {% endif %}
     
-    <p>
-        Event Address: {{ event[0]["address"]["line1"] }}, {{ event[0]["city"]["name"] }}, {{ event[0]["state"]["name"] }} {{ event[0]["postalCode"]}}
-    </p>
+        <p>Event Start Date:</br> 
+            {{ data["dates"]["start"]["localDate"] }} at {{ data["dates"]["start"]["localTime"]}} Local Time
+        </p>
 
-    {% if "priceRanges" in data %}
-        <p>Price Range(*not including tax and fees): ${{ data["priceRanges"][0]["min"] }} - ${{ data["priceRanges"][0]["max"] }}
-    {% endif %}
+        <p>Event Location:</br> 
+            {{ event[0]["name"] }}
+        </p>
+
+        {% if "seatmap" in data %}
+            <p>Seat Map: <img src={{ data["seatmap"]["staticUrl"] }}></p>
+        {% endif %}
     
-    <p>Purchase Event Ticket:</br> 
-        <a href={{ data["url"] }} target="_blank">Tickemaster</a>
-        {% if "outlets" in data %}
-        Or <a href={{ data["outlets"][0]["url"] }}>Box Office Site</a>
-        {% endif %}
-    </p>
+    <input type="hidden" id="map_lat" name="map-lat" value={{ event[0]["location"]["latitude"] }}>
+    <input type="hidden" id="map_lng" name="map-lng" value={{ event[0]["location"]["longitude"] }}>
+        <p>
+            Event Address: {{ event[0]["address"]["line1"] }}, {{ event[0]["city"]["name"] }}, {{ event[0]["state"]["name"] }} {{ event[0]["postalCode"]}}
+        </p>
 
-    <p>For More Information/Questions: </br>
-        {% if "ada" in data %}
-            {{ event[0]["ada"]["adaCustomCopy"] }}
-        {% elif "pleaseNote" in data %}
-            {{ data["pleaseNote"] }}
-        {% elif "outlets" in data %}
-            Visit <a href={{ data["outlets"][0]["url"] }}>{{ data["outlets"][0]["url"] }}</a>
-        {% else %}
-            Not available.
+        {% if "priceRanges" in data %}
+            {% if data["priceRanges"][0]["min"] == data["priceRanges"][0]["max"] %}
+                <p>Price Range(*not including tax and fees): ${{ data["priceRanges"][0]["max"] }}</p>
+            {% else %}
+                <p>Price Range(*not including tax and fees): ${{ data["priceRanges"][0]["min"] }} - ${{ data["priceRanges"][0]["max"] }}
+            {% endif %}
         {% endif %}
-    </p>
+    
+        <p>Purchase Event Ticket:</br> 
+            <a href={{ data["url"] }} target="_blank">Tickemaster</a>
+            {% if "outlets" in data %}
+                Or <a href={{ data["outlets"][0]["url"] }}>Box Office Site</a>
+            {% endif %}
+        </p>
 
-    ============================================
-    <form action="/event/<id>/review" id="review-form" method="POST">
+        <p>For More Information/Questions: </br>
+            {% if "ada" in data %}
+                {{ event[0]["ada"]["adaCustomCopy"] }}</p>
+            {% elif "pleaseNote" in data %}
+                {{ data["pleaseNote"] }}</p>
+            {% elif "outlets" in data %}
+                Visit <a href={{ data["outlets"][0]["url"] }}>{{ data["outlets"][0]["url"] }}</a></p>
+            {% else %}
+                Not available.
+            {% endif %}
+        </p>
+
+        <div id="gMap">
+            <h4>Map! (right hand side on page; Bootstrap, CSS)</h4>
+                <section class="map">
+                    <div id="map"></div>
+                </section>
+        </div>
+
+
+    {% if "user" not in session %}
+        <p>Must first sign in to get access to the reviews.
+            <a href="/new_account" target="_blank">Creat an Account</a> rr
+            <a href="/">Sign In(Pull the user back to the top nav bar at the same page)</a>
+        </p>
+    {% else %}   
+        <form action="/event/<id>/review" id="review-form" method="POST">
         <input type="hidden" id="event-id" name="event-id" value={{ event_id }}>
-        <p>Create review: (right col=6 , Bootstrap)</p>
-        <div>
-            <label class="form-label above" for="rating">Rating: (1-5 stars)</label>
-            <input id="rating-score" class="form-control" type="text" name="rating" placeholder="Enter rating (1-5)"> 
-            <!--Add CSS stars HERE-->
-        </div>
-        
-        <div>
-            <label class="form-label above" for="review-title">Review Title:</label>
-            <input id="review-title" class="form-control" type="text" name="title" placeholder="Enter the title for this review"> 
-        </div>
-        
-        <div>
-            <label class="form-label above" for="review-description">Review:</label>
-            <textarea id="review-description" class="form-control" type="text" name="review" rows="5" cols="50" placeholder="Enter review here"></textarea>
-        </div>
-        
-        <div>
-            <label class="form-label above" for="recommendation">Would you recommend this event to others?</label>
-                <input type="radio" id="yes-no" name="recommendation" value="yes">
-                    <label for="yes">Yes</label>
-                <input type="radio" id="yes-no" name="recommendation" value="no">
-                    <label for="no">No</label>
-        </div>
-        
-        <div class="col-3">
-            <input type="submit" value="Submit Review" id="submit">
-        </div>
-    </form>
-
-    <p>All Reviews: (Bootstrap;Left, col=6) + Rank reviews by highest rating/lowest rating/most recent date(2.0/3.0)</p>
-        {% if not reviews_in_event %}
-            <p>No written reviews. </p>
-        {% endif %}
-        {% for review in reviews_in_event %}
-            <li type="1" class="review-list" id="full-review">
+            <p>Create review: (right col=6 , Bootstrap)</p>
                 <div>
+                    <label class="form-label above" for="rating">Rating: (1-5 stars)</label>
+                    <input id="rating-score" class="form-control" type="number" name="rating" min="1" max="5" placeholder="Enter rating (1-5)" required> 
+                    <!--Add CSS stars HERE-->
+                </div>
+        
+                <div>
+                    <label class="form-label above" for="review-title">Review Title:</label>
+                    <input id="review-title" class="form-control" type="text" name="title" placeholder="Enter the title for this review" required> 
+                </div>
+        
+                <div>
+                    <label class="form-label above" for="review-description">Review:</label>
+                    <input id="review-description" class="form-control" type="text" name="review" rows="5" cols="50" placeholder="Enter review here" required>
+                </div>
+        
+                <div>
+                    <label class="form-label above" for="recommendation">Would you recommend this event to others?</label>
+                    <input type="radio" id="yes-no" name="recommendation" value="yes" required>
+                        <label for="yes">Yes</label>
+                    <input type="radio" id="yes-no" name="recommendation" value="no" required>
+                        <label for="no">No</label>
+                </div>
+        
+                <div class="col-3">
+                    <input type="submit" value="Submit Review" id="submit">
+                </div>
+        </form>
+
+ 
+        <p>All Reviews: (Bootstrap;Left, col=6) + Rank reviews by highest rating/lowest rating/most recent date(2.0/3.0)</p>
+            {% if not reviews_in_event %}
+                <p>No written reviews yet. </p>
+            {% endif %}
+        
+            {% for review in reviews_in_event %}
+                <li type="1" class="review-list" id="full-review">
+                    <div>
                     Written By: User {{ review.user_id }}</br>
                     Date: {{ review.review_date }}</br>
                     Title: <span id="title_{{ review.review_id }}">{{ review.review_title }}</span></br>
                     Event Score: <span id="rating_{{ review.review_id }}">{{ review.rating_score }}</span></br>
                     Description: <span id="description_{{ review.review_id }}">{{ review.review_description }}</span></br>
                     <span id="recommend_{{ review.review_id }}">
-                    {% if review.review_recommend %}
+                        {% if review.review_recommend %}
                         Recommendation: Yes
-                    {% else %}
+                        {% else %}
                         Recommendation: No
-                    {% endif %}
+                        {% endif %}
                     </span>
+                    
                     {% if session["user"]== review.user_id %}
-                    <button onClick="show_edit_form()">Edit</button>
-                    <div id="show-edit-form" hidden>
-                    <form id="edit-review-form" method="POST">
-                        <input type="hidden" id="edit-review-id" value={{ review.review_id }}>
-                        <input type="hidden" id="event-id" name="event-id" value={{ event_id }}>
+                        <button onClick="show_edit_form()">Edit</button>
+                    
+                        <div id="show-edit-form" hidden>
+                            <form id="edit-review-form" method="POST">
+                                <input type="hidden" id="edit-review-id" value={{ review.review_id }}>
+                                <input type="hidden" id="event-id" name="event-id" value={{ event_id }}>
                                 Edit Your Review:
-                            <div>
-                                <label class="form-label above" for="rating">Rating: (1-5 stars)</label>
-                                <input id="edit-rating-score" class="form-control" type="text" name="rating" placeholder="Enter rating (1-5)"> 
-                                <!--Add CSS stars HERE-->
-                            </div>
-                            <div>
-                                <label class="form-label above" for="review-title">Review Title:</label>
-                                <input id="edit-review-title" class="form-control" type="text" name="title" placeholder="Enter the title for this review"> 
-                            </div>
-                            <div>
-                                <label class="form-label above" for="review-description">Review:</label>
-                                <textarea id="edit-review-description" class="form-control" type="text" name="review" rows="5" cols="50" placeholder="Enter review here"></textarea>
-                            </div>
-                            <div>
-                                <label class="form-label above" for="recommendation">Would you recommend this event to others?</label>
-                                    <input type="radio" id="edit-yes-no" name="recommendation" value="true">
-                                        <label for="yes">Yes</label>
-                                    <input type="radio" name="recommendation" value="false">
-                                        <label for="no">No</label>
-                            </div>
-                            <div class="col-3">
-                                <input type="submit" value="Update" id="update-submit">
-                            </div>
-                    </form>
-                </div>
+                                    <div>
+                                        <label class="form-label above" for="rating">Rating: (1-5 stars)</label>
+                                        <input id="edit-rating-score" class="form-control" type="text" name="rating" placeholder="Enter rating (1-5)" required> 
+                                    </div>
+                            
+                                    <div>
+                                        <label class="form-label above" for="review-title">Review Title:</label>
+                                        <input id="edit-review-title" class="form-control" type="text" name="title" placeholder="Enter the title for this review" required> 
+                                    </div>
+                            
+                                    <div>
+                                        <label class="form-label above" for="review-description">Review:</label>
+                                        <input id="edit-review-description" class="form-control" type="text" name="review" rows="5" cols="50" placeholder="Enter review here" required>
+                                    </div>
+                            
+                                    <div>
+                                        <label class="form-label above" for="recommendation">Would you recommend this event to others?</label>
+                                        <input type="radio" id="edit-yes-no" name="recommendation" value="true" required>
+                                            <label for="yes">Yes</label>
+                                        <input type="radio" name="recommendation" value="false" required>
+                                            <label for="no">No</label>
+                                    </div>
+                            
+                                    <div class="col-3">
+                                        <input type="submit" value="Update" id="update-submit">   
+                                    </div>
+                            </form>
+                            <button id="cancel-submit">Cancel</button>
+                        </div>
                     {% endif %}
-                <div>
-        {% endfor %}
-    
-        <h4>Map! (right hand side on page; Bootstrap)</h4>
-        <section class="map">
-            <div id="map"></div>
-        </section>
-    </div>
+                    </div>
+            {% endfor %}
+            {% endif %}
 
+        
+
+    <script src="/static/js/scroll_top.js"></script>
     <script src="/static/js/edit_review.js"></script>
     <script src="/static/js/gMap.js"></script>
     <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByH1t-H-7MgU-yqWU2hCAOBIDHDeQjop4&callback=initMap"></script>

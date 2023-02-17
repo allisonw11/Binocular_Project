@@ -12,7 +12,8 @@
         {% for review in reviews %}
             <li type="1" class="review-list">
                 <div>
-                    Event: {{ review.event_id }}</br>
+                    Event: 
+                    <a href="/event/{{ review.event_id }}">{{ review.event.event_title }}</a></br>
                     Date: {{ review.review_date }}</br>
                     Title: {{ review.review_title }}</br>
                     Rating: {{ review.rating_score }}</br>
@@ -22,10 +23,6 @@
                     {% else %}
                         Recommendation: No
                     {% endif %}
-                    
-                    <button type="button" class="close" onClick="deleteReview({{ review.review_id }})">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
             </li>
     {% endfor %}

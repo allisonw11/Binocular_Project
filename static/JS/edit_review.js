@@ -1,12 +1,17 @@
+'use strict';
 function show_edit_form() {
     const edit_btn = document.querySelector("#show-edit-form");
-    edit_btn.removeAttribute("hidden")
+    edit_btn.hidden = false;
 };
-    
+
+
 function cancel_edit_form() {
-    const cancel_edit_btn = document.querySelector("#cancel-submit");
-    cancel_edit_btn.addAttribute("hidden")
+    const cancel_edit_btn = document.querySelector("#show-edit-form");
+    cancel_edit_btn.hidden = true;
 };
+
+document.querySelector("#cancel-submit").addEventListener("click", cancel_edit_form);
+
 
 document.querySelector("#edit-review-form").addEventListener("submit", (evt) => {
     evt.preventDefault();
@@ -33,11 +38,14 @@ fetch("/edit_review", {
         document.querySelector(`#rating_${ review_id }`).innerHTML=editFormInputs["rating"];
         document.querySelector(`#description_${ review_id }`).innerHTML=editFormInputs["review"];
         if (editFormInputs["recommendation"]) {
-            document.querySelector(`#recommend_${ review_id }`).innerHTML="recommendation:yes"
+            document.querySelector(`#recommend_${ review_id }`).innerHTML="Recommendation: Yes"
         }
         else {
-            document.querySelector(`#recommend_${ review_id }`).innerHTML="recommendation:no"
-        }
+            document.querySelector(`#recommend_${ review_id }`).innerHTML="Recommendation: No"
+        };
+        setTimeout(function() {
+            const edit_btn =document.querySelector("#show-edit-form");
+            edit_btn.hidden = true;
+        }, 200);
     });
-    });
-
+});

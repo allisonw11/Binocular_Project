@@ -1,5 +1,5 @@
 """Server for event look-up app"""
-from flask import Flask, render_template, request, flash, session, redirect, jsonify
+from flask import Flask, render_template, request, flash, session, redirect
 from model import connect_to_db, db
 from pprint import pformat
 from jinja2 import StrictUndefined
@@ -7,18 +7,36 @@ import requests
 import crud
 import os
 from datetime import datetime
-import json
+import random
 
 app = Flask(__name__)
 app.secret_key = "dev"
 app.jinja_env.undefined = StrictUndefined
 TICKETMASTER_KEY = os.environ["TICKETMASTER_KEY"]
-API_KEY = os.environ["GMAP_KEY"]
 
 @app.route("/")
 def homepage():
     """View Homepage."""
     
+    user = crud.get_user_by_id(session.get("user"))
+    
+    if user:
+        url = "https://app.ticketmaster.com/discovery/v2/events.json?countryCode=US"
+        payload = {
+            "apikey": TICKETMASTER_KEY,
+            "postalCode": user.zipcode,
+            "size": "50"
+            }
+        res = requests.get(url, params=payload)
+        data = res.json()
+        
+        if "_embedded" in data:
+            events = data["_embedded"]["events"]
+            random_events = random.sample(events,k=5)
+
+            return render_template("homepage.html",
+                                    data=data,
+                                    results=random_events)
     return render_template("homepage.html")
 
 
@@ -26,23 +44,25 @@ def homepage():
 @app.route("/", methods=["POST"])
 def log_in():
     """Log-in a user."""
-    # Handle POST form submission of the login at homepage
+    
     email = request.form.get("email")
     password = request.form.get("password")
+    
     user = crud.login_user(email, password)
-    print(user)
+    
     if user:
         session["user"] = user
-        flash("You are successfully logged in.")
+        flash("You are signed in.", category="success")
     else:
-        flash("Error! Please create a new account.")
+        flash("Incorrect email/password. Try again.", category="error")
     return redirect("/")
 
 
 
-@app.route("/logout", methods=["POST"])
+@app.route("/logout")
 def log_out():
     """Log-out a user."""
+    
     session.clear()
     return redirect("/")
     
@@ -51,14 +71,18 @@ def log_out():
 @app.route("/new_account")
 def create_account():
     """View create account page."""
-
-    return render_template("new_account.html")
-
+    
+    if "user" not in session:
+        return render_template("new_account.html")
+    else:
+        flash("You are already login!", category="success")
+        return redirect("/")
 
 
 @app.route("/new_account", methods=["POST"])
 def creat_new_user():
     """Create a new user."""
+    
     fname = request.form.get("fname")
     lname = request.form.get("lname")
     email = request.form.get("email")
@@ -67,33 +91,26 @@ def creat_new_user():
     state = request.form.get("states")
     zipcode = request.form.get("zipcode")
     
-    # Add conditionals here when want flashing msg display at top of new_account.html page
-    if len(email)<6:
-        # Make sure each email is unique with NO DUPLICATION!!!
-        flash("Email is not a valid address.")
-        
-    elif len(fname)<2:
-        pass
+    # should we keep this or use regex from html?
+    if len(fname)<2:
+        flash("First name must be greater than 2 characters.", category="error")    
+    elif len(lname)<=2:
+        flash("Last name must be greater than 1 character.", category="error")
+    elif "@" not in email and len(email)<5:
+        flash("Not a valid email address.", category="error")
+    elif len(password)<8:
+        flash("Password must be at least 8 characters.", category="error")
+    elif len(address)<5:
+        flash("This is not a valid address.", category="error")
+    elif len(zipcode)<5:
+        flash("Zipcode must have 5 digits.", category="error")
     else:
-        # add user.crud...
-        # add db.session.add(user here!)
-        # add db.session.commit()
-        # flash msg "create new account"
-        pass
-        
-    user = crud.create_user(fname,lname,email,password,address,state,zipcode)
-    
-    db.session.add(user)
-    db.session.commit()
-    
-    if user:
-        flash("You have created a new account.")
-        return redirect("/user_profile", user=user)
-    else:
-        flash("Something is missing. Try again!")
-        # flash msg should based on the missing info/conditionals from above
-        return render_template("new_account.html")
-
+        user = crud.create_user(fname,lname,email,password,address,state,zipcode)
+        db.session.add(user)
+        db.session.commit()
+        flash("You have created a new account.", category="success")
+        return redirect("/")
+    return render_template("new_account.html")
 
 
 @app.route("/user_profile")
@@ -103,7 +120,6 @@ def user_profile():
     user = crud.get_user_by_id(session["user"])
     
     if "user" in session:
-        flash("Loggin Successfully")
         return render_template("user_profile.html", user=user)
     else:
         return redirect("/")
@@ -123,36 +139,30 @@ def all_events_result():
     # Url limited to USA only
     url = "https://app.ticketmaster.com/discovery/v2/events.json?countryCode=US"
     payload = {
-        "apikey": TICKETMASTER_KEY,
-        "keyword": keyword,
-        "postalCode": postalCode,
-        "radius": radius,
-        "unit": "miles",
-        "sort": sort,
-        "page": page
-        }
+            "apikey": TICKETMASTER_KEY,
+            "keyword": keyword,
+            "postalCode": postalCode,
+            "radius": radius,
+            "unit": "miles",
+            "sort": sort,
+            "page": page
+            }
     # add if statement here using radius must add in zipcode too, flash msg to redirect
-
 
     res = requests.get(url, params=payload)
     data = res.json()
-    # out_file = open("events.json", "w")
-    # import json
-    # json.dump(data, out_file)
-    # out_file.close()
     
     if "_embedded" in data:
         events = data["_embedded"]["events"]
         return render_template("search_results.html",
-                           pformat=pformat,
-                           data=data,
-                           results=events
-                           )
+                            data=data,
+                            results=events
+                            )
     else:
-        flash("need msg")
+        flash("No event match your search setting. Please try again.", category="error")
         return redirect("/")
-
-
+    
+    
     
 @app.route("/event/<id>")
 def show_event(id):
@@ -222,7 +232,7 @@ def add_review(id):
                                 )
     db.session.add(review)
     db.session.commit()
-    flash("Successfully added a review.")
+    flash("You have added a review.", category="success")
     
     return redirect(f"/event/{event_id}")
                     
@@ -237,7 +247,6 @@ def edit_review():
     review_title = request.json.get("title", "")
     review_description = request.json.get("review", "")
     review_recommend = request.json.get("recommendation", "")
-    # edit_review_date = current_date.strftime("%m/%d/%Y") TODO LATER!
     
     updated_review = crud.updated_review(session["user"],
                                          event_id,
@@ -248,7 +257,7 @@ def edit_review():
                                         )
     db.session.add(updated_review)
     db.session.commit()
-    
+    flash("You have updated your review.", category="success")
     return "Review has been updated."
 
 
@@ -259,23 +268,16 @@ def view_review():
 
     user = crud.get_user_by_id(session["user"])
     reviews = crud.get_review_by_userid(user.user_id)
-
+    
     return render_template("user_reviews.html", user=user, reviews=reviews)
 
 
 
-@app.route("/delete_review")
-def delete_review():
-    """Delete a review submitted by user previously."""
-    # Need more work, button is clickable but is not removing the review
-    review = crud.get_review_by_reviewid(review.review_id)
-    if review:
-        db.session.delete(review)
-        db.session.commit()
-    return render_template("user_reviews.html", review=review)
-
-
-
+@app.route("/help")
+def help():
+    """Help page to navigate the site."""
+    
+    return render_template("help.html")
 
 if __name__ == "__main__":
     connect_to_db(app)

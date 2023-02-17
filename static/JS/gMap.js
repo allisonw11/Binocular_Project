@@ -1,14 +1,17 @@
 'use strict';
+const map_lat = document.querySelector("#map_lat").value;
+const map_lng = document.querySelector("#map_lng").value;
+
 
 function initMap() {
     const eventCoord = {
-        lat: 37.768009,
-        lng: -122.387787,
+        lat: Number(map_lat),
+        lng: Number(map_lng),
     };
 
     const basicMap = new google.maps.Map(document.querySelector('#map'), {
         center: eventCoord,
-        zoom:11,
+        zoom:15,
     });
 
     const eventMarker = new google.maps.Marker({
@@ -17,9 +20,10 @@ function initMap() {
         map: basicMap,
     });
 
+    
     const eventInfo = new google.maps.InfoWindow({
-        content: '<h3>Event Title Here!</h3>',
+        content: 'Here',
     });
 
     eventInfo.open(basicMap, eventMarker);
-}
+};

@@ -1,9 +1,8 @@
 """CRUD operations."""
 # import db and connet class tables here from model.py
-# UPDATE class tables HERE --->
 
 from model import db, User, Event, Review, connect_to_db
-
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # This connects to the database when run curd.py interactively 
 def create_user(fname, lname, email, password, address, state, zipcode):
@@ -12,7 +11,7 @@ def create_user(fname, lname, email, password, address, state, zipcode):
     user = User(fname=fname,
                 lname=lname,
                 email=email, 
-                password=password, 
+                password=generate_password_hash(password, method="sha256"), 
                 address=address, 
                 state=state, 
                 zipcode=zipcode)
@@ -24,9 +23,10 @@ def login_user(email, password):
     
     current_id = User.query.filter(User.email == email).first()
     
-    # Check if password is correct for current_id
+    # Check if password is correct for current_id after verify email is correct
     if current_id:
-        if current_id.password == password:
+        if check_password_hash(current_id.password, password):
+        # if current_id.password == password:
             return current_id.user_id    
     return False
 
@@ -80,6 +80,7 @@ def get_review_by_userid(user_id):
     """Access all reviews created by user using it's user_id.""" 
 
     return Review.query.filter(Review.user_id==user_id).all()
+
 
 def get_review_by_eventid(event_id):
     """Access all reviews under an event id."""

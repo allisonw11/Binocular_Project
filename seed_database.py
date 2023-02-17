@@ -48,8 +48,8 @@ for n in range(3):
     email = f"user{n}@test.com"
     password = "test"
     address = f"123{n} Main Street"
-    state = "HI"
-    zipcode = "96701"
+    state = "MA"
+    zipcode = "02116"
     
     # Create a user and add to User db
     user = crud.create_user(fname, lname, email, password, address, state, zipcode)    
