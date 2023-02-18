@@ -13,6 +13,11 @@
     border-radius: 10px;
     font-size: 18px; 
   }
+
+#myBtn:hover {
+    background-color: #555;
+  }
+
 /* For password regex display */
   /* Style all input fields */
 input {
@@ -38,7 +43,7 @@ input[type=submit] {
 }
 
 /* The message box is shown when the user clicks on the password field */
-#message {
+#psw-message {
   display:none;
   background: #f1f1f1;
   color: #000;
@@ -47,7 +52,7 @@ input[type=submit] {
   margin-top: 10px;
 }
 
-#message p {
+#psw-message p {
   padding: 10px 35px;
   font-size: 18px;
 }
