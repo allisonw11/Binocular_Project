@@ -10,40 +10,63 @@ JSON data visulization
         <p>{{ data }}</p>
     </div>
   -->
-<p>Google Map Box right hand side? or center. Add tracker?</p>
+<body>
+<br>
+  <div id="header-box">
+    <div class="container-fluid col-11">
+      <h3><strong>Search Results</strong></h3>
+    </div>
+  </div>
 
-    <h1>Display Search Results</h1>
-    <a href="/">Return to Homepage</a>
+  <div class="container-fluid col-10">
     <p>
-        <span id="result-count">
-        {{ data["page"]["totalElements"] }}
-        </span>
-    Events matched your search.
+      There are 
+      <span id="result-count">
+        <strong>{{ data["page"]["totalElements"] }}</strong>
+      </span>
+      events matched your search.
     </p>
+  </div>
+  
 
+<div class="container-fluid col-10">
+  {% for event in results %}
+  <li type="1" class="events-list">
+    <div class="g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm position-relative">
+      {{ event["dates"]["start"]["localDate"]}}
+      <a href="/event/{{ event["id"] }}">
+        {{ event["name"] }}
+      </a>
+      <p>
+      {% if "classifications" in event %}
+        {% if "genre" %}
+          Genre: {{ event["classifications"][0]["genre"]["name"] }}
+        {% endif %}
 
-    <ol type="1" class="events-list">
-        {% for event in results %}
-          <li>
-            {{ event["dates"]["start"]["localDate"]}}
-            <a href="/event/{{ event["id"] }}">
-              {{ event["name"] }}
-            </a>
-          </li>
-        {% endfor %}
-    </ol>   
-
-    {% if "page" in data %}
-      {% if data.page.number > 0 %}
-        <button onclick="changePage('{{ +data.page.number - 1 }}')">Previous Page</button>
+        {% if "segment" %}
+          {{ event["classifications"][0]["segment"]["name"] }}
+        {% endif %}
+      </p>
+        <p>Location: {{ event["_embedded"]["venues"][0]["city"]["name"] + ", " + event["_embedded"]["venues"][0]["state"]["name"] }}</p>
       {% endif %}
-      
-      {% if data.page.number + 1 < data.page.totalPages %}
-        <button onclick="changePage('{{ +data.page.number + 1 }}')">Next Page</button>
-      {% endif %}
-    {% endif %}
-    
-  <script src="/static/js/change_page.js"></script>
+    </div>
+  </li> 
+  {% endfor %}
+
+{% if "page" in data %}
+{% if data.page.number > 0 %}
+<button onclick="changePage('{{ +data.page.number - 1 }}')">Previous Page</button>
+{% endif %}
+
+{% if data.page.number + 1 < data.page.totalPages %}
+<button onclick="changePage('{{ +data.page.number + 1 }}')">Next Page</button>
+{% endif %}
+{% endif %}
 
 
+<br>
+<a href="/">Return to Homepage</a>
+</div>
+</body>
+<script src="/static/js/change_page.js"></script>
 {% endblock %}

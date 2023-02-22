@@ -3,28 +3,47 @@
 {% block title %}My Reviews{% endblock %}
 
 {% block content %}
-<h1>{{ user.fname +" "+ user.lname }}'s Reviews:</h1>
+<br>
+<div id="header-box">
+    <div class="container-fluid col-11">
+        <h3><strong>{{ user.fname +" "+ user.lname }}'s Reviews:</strong></h3>
+    </div>
+</div>
 
-<h4>My Reviews:</h4>
-    {% if not reviews %}
-        No written reviews.
-    {% endif %}
+<br>
+<div class="container-fluid col-11">
+    <div class="row">
+        {% if not reviews %}
+        <li class="offset-1">
+            No written reviews.
+        </li>
+        {% endif %}
+    
         {% for review in reviews %}
-            <li type="1" class="review-list">
-                <div>
-                    Event: 
-                    <a href="/event/{{ review.event_id }}">{{ review.event.event_title }}</a></br>
-                    Date: {{ review.review_date }}</br>
-                    Title: {{ review.review_title }}</br>
-                    Rating: {{ review.rating_score }}</br>
-                    Review Description: {{ review.review_description }}</br>
-                    {% if review.review_recommend %}
-                        Recommendation: Yes
-                    {% else %}
-                        Recommendation: No
-                    {% endif %}
-                </div>
-            </li>
-    {% endfor %}
-
+        <li type="1" class="review-list col-6">
+            <div class="g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                        <div id="review-box">
+                            <strong>Date:</strong> {{ review.review_date.strftime('%Y-%m-%d') }}</br>
+                            <strong>Event:</strong>
+                            <a href="/event/{{ review.event_id }}" class="link-dark" aria-current="page">{{ review.event.event_title }}</a></br>
+                            <strong>Rating:</strong> {{ review.rating_score }}</br>
+                            <strong>Title:</strong> {{ review.review_title }}</br>
+                            <strong>Review Description:</strong></br>
+                                <div class="col-10 offset-1">
+                                    {{ review.review_description }}</br>
+                                </div>
+                            {% if review.review_recommend %}
+                            <strong>Recommendation:</strong> Yes
+                            {% else %}
+                            <strong>Recommendation:</strong> No
+                            {% endif %}
+                        </div>
+            </div>
+        </li>
+        {% endfor %}
+    </div>
+</div>
+<div class="container-fluid col-11">
+    <a href="/view_user_reviews">Return to Top</a>
+</div>
 {% endblock %}

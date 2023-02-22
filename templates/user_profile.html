@@ -1,19 +1,31 @@
 {% extends 'base.html' %}
 
-{% block title %}Your Profile{% endblock %}
+{% block title %}User Profile{% endblock %}
 
 {% block content %}
 
-        <h1 align="center">{{ user.fname +" "+ user.lname }}'s Profile:</h1>
-        <p>Profile:</p>
-
-        <p>First Name: {{ user.fname }}</p>
-        <p>Last Name: {{ user.lname }}</p>
-        <p>Email: {{ user.email }}</p>
-        <p>Address: {{ user.address }}</p>
-        <p>State: {{ user.state }}</p>
-        <p>Zip Code: {{ user.zipcode }}</p>
-
-        <a href="/">Return to Homepage</a>
-
+<br>
+<div id="header-box">
+        <div class="container-fluid col-11">
+                <h3 align="left"><strong>{{ user.fname +" "+ user.lname }}'s Profile:</strong></h3>
+        </div>
+</div>
+<br>
+<div class="container-fluid col-11">
+        <div class="col-md-12">
+        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                <div id="profile-box">
+                <p><strong>First Name:</strong> {{ user.fname }}</p>
+                <p><strong>Last Name:</strong> {{ user.lname }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Address:</strong> {{ user.address }}</p>
+                <p><strong>State:</strong> {{ user.state }}</p>
+                <p><strong>Zip Code:</strong> {{ user.zipcode }}</p>
+                </div>
+        </div>
+        </div>
+</div>
+<div class="container-fluid col-11">
+        <a href="/" class="link-dark" aria-current="page">Return Home</a>
+</div>
 {% endblock %}

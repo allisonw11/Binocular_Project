@@ -6,7 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!--Bootstraps CDN-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"  integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <!--Google font:lato-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
     {% block head %}
     <title>{% block title %}TITLE GOES HERE{% endblock %}</title>
     {% endblock %}
@@ -14,36 +19,63 @@
   
 
   <body>
-  <div class="container-fluid" id="top-page">
-    <!--Row/nav bar on top of all pages-->
-    <div class="row">
+  <div class="container-fluid">
+    <!--Nav bar on top of all pages-->
+    <header>
 
-      <div class="col-2">
-        <a href="/">Home(CSS home icon)</a>
-      </div>
-
-      {% if "user" not in session %}
-        <div class="col-2">
-          <a href="/new_account">Create Account</a>
-        </div>
-      {% else %}
-        <div class="col-2">
-          <a href="/user_profile">My Profile</a>
-        </div>
+    <nav class="navbar navbar-expand-md d-flex justify-content-center py-3 border-bottom">
+      <div class="container-fluid">
+          <a href="/" class="navbar-brand link-dark" aria-current="page"><strong>Home</strong></a>
         
-        <div class="col-2">
-          <a href="/view_user_reviews">My Reviews</a>
-        </div>
+        {% if "user" not in session %}
+        <ul class="nav-item">
+          <a href="/new_account" class="nav-link link-dark" aria-current="page">Create Account</a>
+        </ul>
 
-        <div class="col-2">
-          <a href="/logout">Logout</a>
+        <div class="col-12 col-md-6">
+          <form class="d-flex" action="/" method="POST">
+            <ul><label class="form-label above" for="email">Email:
+              <input type="text" name="email" placeholder="Enter Email" required></label>
+            </ul>
+            
+            <ul><label class="form-label above" for="password">Password:
+              <input type="password" name="password" placeholder="Enter Password" required></label>
+            </ul>
+
+            <div class="row mt3">
+              <button type="submit" class="btn btn-outline-success">Log In</button>
+            </div>
+          </form>    
         </div>
-      {% endif %}
+        {% else %}
+        <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" 
+        data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" 
+        aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <li class="nav-item">
+              <a href="/user_profile" class="nav-link link-dark" aria-current="page">Profile</a>
+            </li>
+
+            <li class="nav-item">
+              <a href="/view_user_reviews" class="nav-link link-dark" aria-current="page">My Reviews</a>
+            </li>
       
-      <div class="col-2">
-        <a href="/help">Help</a>
-      </div> 
-    </div>
+            <li class="nav-item">
+              <a href="/help" class="nav-link link-dark" aria-current="page">Q&A</a>
+            </li>
+
+            <li class="nav-item">
+              <a href="/logout" class="nav-link link-dark" aria-current="page">Logout</a>
+            </li>
+          </ul>
+        </div>
+        {% endif %}
+      </div>
+    </nav>
+
     
       {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -61,18 +93,28 @@
         {% endif %}
       {% endwith %}
     </div>
+  </header>
 
   {% block content %} 
   BODY CONTENT of base.html
   {% endblock %}
+  
+  <div class="container-fluid" id="bottom-page">
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+      <div class="col-md-4 d-flex align-items-center">
+        <a href"/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">Home icon
+          <svg class="bi" width="30" height="24">
+          <use xlink:href="#bootstrap"></use>
+          </svg>
+        </a>
+        <span class="mb-3 mb-md-0 text-muted">© 2023 Company, Inc</span>
+      </div>
 
-  <div>-----------------Footer--------------------------------------</div>
+    </footer>
+  </div>
   
     
-
-
-
-    
+    <script src="/static/js/topNav.js"></script>
     <!--Bootstrap JavaScript Bundle with Popper-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
   </body>
