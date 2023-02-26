@@ -10,63 +10,78 @@ JSON data visulization
         <p>{{ data }}</p>
     </div>
   -->
-<body>
-<br>
+
+  <br>
   <div id="header-box">
     <div class="container-fluid col-11">
       <h3><strong>Search Results</strong></h3>
     </div>
   </div>
 
-  <div class="container-fluid col-10">
-    <p>
-      There are 
-      <span id="result-count">
-        <strong>{{ data["page"]["totalElements"] }}</strong>
-      </span>
-      events matched your search.
-    </p>
+  <div id="header-underline">
+    <div class="container-fluid col-10">
+      <p>
+        "There are 
+        <span id="result-count">
+          {{ data["page"]["totalElements"] }}
+        </span>
+        events matched your search."
+      </p>
+    </div>
   </div>
   
 
-<div class="container-fluid col-10">
+<div class="container-fluid col-9">
   {% for event in results %}
   <li type="1" class="events-list">
-    <div class="g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm position-relative">
-      {{ event["dates"]["start"]["localDate"]}}
-      <a href="/event/{{ event["id"] }}">
-        {{ event["name"] }}
-      </a>
-      <p>
-      {% if "classifications" in event %}
-        {% if "genre" %}
-          Genre: {{ event["classifications"][0]["genre"]["name"] }}
-        {% endif %}
+    <div class="g-0 border rounded overflow-hidden flex-md-row mb-1 shadow-sm position-relative" id="events-box">
+      <div class="row mt-0">
+        <div align="center" class="col-4 mb-1 mt-1" id="events-box-left">
+          <p>{{ event["dates"]["start"]["localDate"] }}</p>
+          <img height="70" width="115" src="{{ event["images"][6]["url"] }}">
+            <p>Starts at {{ event["dates"]["start"]["localTime"] }} Local Time</p>
 
-        {% if "segment" %}
-          {{ event["classifications"][0]["segment"]["name"] }}
-        {% endif %}
-      </p>
-        <p>Location: {{ event["_embedded"]["venues"][0]["city"]["name"] + ", " + event["_embedded"]["venues"][0]["state"]["name"] }}</p>
-      {% endif %}
+        </div>
+        
+        <div class="col-8" id="events-box-right">
+          <div class="container-fluid col-12 mt-3 mb-1">
+            <h6><a href="/event/{{ event["id"] }}">{{ event["name"] }}</a></h6>
+            <div class="container-fluid col-12">
+            {% if "classifications" in event %}
+              {% if "genre" %}
+                Genre: {{ event["classifications"][0]["genre"]["name"] }}
+              {% endif %}
+              {% if "segment" %}
+                / {{ event["classifications"][0]["segment"]["name"] }}
+              {% endif %}
+              <p>Location: {{ event["_embedded"]["venues"][0]["city"]["name"] + ", " + event["_embedded"]["venues"][0]["state"]["name"] }}</p>
+            {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </li> 
   {% endfor %}
-
-{% if "page" in data %}
-{% if data.page.number > 0 %}
-<button onclick="changePage('{{ +data.page.number - 1 }}')">Previous Page</button>
-{% endif %}
-
-{% if data.page.number + 1 < data.page.totalPages %}
-<button onclick="changePage('{{ +data.page.number + 1 }}')">Next Page</button>
-{% endif %}
-{% endif %}
-
-
-<br>
-<a href="/">Return to Homepage</a>
 </div>
-</body>
+
+  <div class="row">
+    <div class="container-fluid col-10">
+    {% if "page" in data %}
+      {% if data.page.number > 0 %}
+        <button class="btn btn-outline-success" onclick="changePage('{{ +data.page.number - 1 }}')">Previous Page</button>
+      {% endif %}
+
+      {% if data.page.number + 1 < data.page.totalPages %}
+        <button class="btn btn-outline-success" onclick="changePage('{{ +data.page.number + 1 }}')">Next Page</button>
+      {% endif %}
+    {% endif %}
+    </div>
+  </div>
+
+  <br>
+
+</div>
+
 <script src="/static/js/change_page.js"></script>
 {% endblock %}

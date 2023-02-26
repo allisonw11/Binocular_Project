@@ -11,9 +11,12 @@
         </div>
 </div>
 <br>
-<div class="container-fluid col-11">
-        <div class="col-md-12">
+<div class="container-fluid col-9">
         <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div align="center" class="col-4 mt-5" id="proile-img">
+                <img height="188" width="197" src="/static/images/glow_rubber_duck.png">
+            </div>
+            <div class="col-8">    
                 <div id="profile-box">
                 <p><strong>First Name:</strong> {{ user.fname }}</p>
                 <p><strong>Last Name:</strong> {{ user.lname }}</p>
@@ -22,10 +25,11 @@
                 <p><strong>State:</strong> {{ user.state }}</p>
                 <p><strong>Zip Code:</strong> {{ user.zipcode }}</p>
                 </div>
+            </div>    
         </div>
-        </div>
+        
 </div>
-<div class="container-fluid col-11">
-        <a href="/" class="link-dark" aria-current="page">Return Home</a>
+<div class="container-fluid col-10">
+        <a href="/" class="btn btn-outline-success" role="button" aria-current="page">Return Home</a>
 </div>
 {% endblock %}

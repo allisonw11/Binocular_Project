@@ -91,7 +91,7 @@ def creat_new_user():
     state = request.form.get("states")
     zipcode = request.form.get("zipcode")
     
-    # should we keep this or use regex from html?
+
     if len(fname)<2:
         flash("First name must be greater than 2 characters.", category="error")    
     elif len(lname)<=2:
@@ -147,7 +147,6 @@ def all_events_result():
             "sort": sort,
             "page": page
             }
-    # add if statement here using radius must add in zipcode too, flash msg to redirect
 
     res = requests.get(url, params=payload)
     data = res.json()

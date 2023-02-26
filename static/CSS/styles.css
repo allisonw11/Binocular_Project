@@ -8,7 +8,8 @@ body {
 
 /* Slideshow container */
 .slideshow-container {
-  max-width: 1000px;
+  width: 82%;
+  height: 82%;
   position: relative;
   margin: auto;
 }
@@ -25,10 +26,10 @@ body {
   top: 50%;
   width: auto;
   margin-top: -22px;
-  padding: 16px;
-  color: white;
+  padding: 18px;
+  color: black;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 22px;
   transition: 0.6s ease;
   border-radius: 0 3px 3px 0;
   user-select: none;
@@ -42,7 +43,7 @@ body {
 
 /* On hover, add a black background color with a little bit see-through */
 .prev:hover, .next:hover {
-  background-color: rgba(0,0,0,0.8);
+  background-color: rgba(217,217,217,0.5);
 }
 
 /* Caption text */
@@ -72,28 +73,15 @@ body {
   background-color: #717171;
 }
 
-/* Fading animation */
-/* .fade {
-  animation-name: fade;
-  animation-duration: 5s;
-} */
-/* 
-@keyframes fade {
-  from {opacity: 0}
-  to {opacity: 1}
-} */
-
-
 /* For password regex display */
   /* Style all input fields */
 input {
-  width: 100%;
-  padding: 12px;
+  padding: 5px;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
-  margin-top: 6px;
-  margin-bottom: 16px;
+  margin-top: 3px;
+  margin-bottom: 0px;
 }
 
 /* Style the submit button */
@@ -105,7 +93,7 @@ input[type=submit] {
 /* Style the container for inputs */
 .container {
   background-color: #f1f1f1;
-  padding: 20px;
+  padding: 15px;
 }
 
 /* The message box is shown when the user clicks on the password field */
@@ -115,12 +103,12 @@ input[type=submit] {
   color: #000;
   position: relative;
   padding: 20px;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 #psw-message p {
   padding: 10px 35px;
-  font-size: 18px;
+  font-size: 14px;
 }
 
 /* Add a green text color and a checkmark when the requirements are right */
@@ -131,7 +119,7 @@ input[type=submit] {
 .valid:before {
   position: relative;
   left: -35px;
-  content: "&#10004;";
+  content: "✔";
 }
 
 /* Add a red text color and an "x" icon when the requirements are wrong */
@@ -142,7 +130,7 @@ input[type=submit] {
 .invalid:before {
   position: relative;
   left: -35px;
-  content: "&#10006;";
+  content: "✖";
 }
 /* end of psw regex display */
 
@@ -167,3 +155,44 @@ input[type=submit] {
   background: rgba(255, 238, 163, 0.36);
   padding: 15px 40px;
 }
+
+#header-underline {
+  background: rgba(217, 217, 217, 0.36);
+}
+
+#events-box-left {
+  background: rgba(217, 217, 217, 0.36);
+}
+
+#events-box-right {
+  background: whitesmoke
+}
+
+#events-box {
+  background: rgba(217, 217, 217, 0.36)
+}
+
+#login-section {
+  font-size: 15px;
+  display: flex;
+  margin-bottom: 0;
+  padding: 0;
+  justify-content: flex-end;
+}
+
+#login-input {
+  font-size: 14px;
+  max-height: 10px;
+  padding: 0;
+}
+
+#event-img {
+  max-width: 496px;
+  max-height: auto;
+}
+
+#seat-map {
+  max-width: 512px;
+  max-height: auto;
+}
+

@@ -2,13 +2,39 @@
 {% block title %}Events Homepage{% endblock %}
 
 {% block content %}
-{% if "user" in session %}
-  <h3 align="center">Welcome To Event Homepage</h3>
+{% if "user" not in session %}
+  <div class="container-fluid">
+    <form action="/" method="POST">
+      <div class="row" id="login-section">
+
+        <div class="col-1">
+          <label class="col-form-label text-nowrap" for="email">Username:</label>
+        </div>
+        <div class="col-2">
+          <input class="login-input mb-1" type="text" name="email" placeholder="Enter email address" required>
+        </div>
+
+        <div class="col-1">
+          <label class="col-form-label text-nowrap" for="password">Password:</label>
+        </div>
+        <div class="col-2">
+          <input class="login-input mb-1" type="password" name="password" placeholder="Enter password" required>
+        </div>
+
+          <div class="col-1">
+            <button id= "login-section" type="submit" class="btn btn-outline-success mt-2 mb-2">Login</button>
+          </div>
+        
+      </div>
+    </form>
+  </div>
+{% else %}
+  <h4 align="center">Events Recommendation Just For You!</h4>
         <div class="slideshow-container">
           {% for result in results %}    
             <div align="center" class="eventSlides">
               <a href="/event/{{ result["id"] }}">
-                <img src={{ result["images"][0]["url"] }} style="width:60%">
+                <img src={{ result["images"][2]["url"] }} style="width:50%">
                 </a>
               <div class="botom-left">{{ result["name"] }}</div>  
             </div>
@@ -28,51 +54,65 @@
     <br>
 {% endif %}
 
-<div id="search-section">
-  <br>
+
+  <div id="search-section">
+    <br>
     <div class="container-fluid col-8">
       <h4 align="center"><strong>Search For Events</strong></h4>
       <form action="/search">
+
         <div class="row">
+          <div class="col">
           <label for="search-keyword"></label>
-          <input id="search-keyword" class="form-control" type="text" name="keyword" placeholder="Search Event By Keyword(s)"> 
+          <input id="search-keyword" class="form-control" type="text" name="keyword" placeholder="Search Event by Keyword(s)"> 
+          </div>
         </div>
 
         <div class="row">
-          <div class="col-3">
-            <label for="search-zip">Zip Code:</label>
-              <input id="search-zip" class="form-control" type="text" name="zipcode" placeholder="Enter Zipcode">
+          <div class="col-2">
+            <label for="search-zip" class="col-form-label text-nowrap">Zip Code:</label>
           </div>
-
-          <div class="col-3">
-            <label for="search-radius">Distance Radius:</label>
-              <select class="form-control form-select" name="unit">
+          <div class="col-4">
+            <input id="search-zip" class="form-control" type="text" name="zipcode" placeholder="Enter Zipcode">
+          </div>
+        
+          <div class="col-2">
+            <label for="search-radius" class="col-form-label text-nowrap">Distance Radius:</label>
+          </div>
+          <div class="col-4">
+              <select class="form-control form-select mt-1" name="unit">
                 <option value="10">10 miles</option>
                 <option value="15">15 miles</option>
                 <option value="20">20 miles</option>
                 <option value="25">25 miles</option>
               </select>
           </div>
+        </div>
 
+        <div class="row">
+          <div class="col-2">
+            <label for="search-sort-by" class="col-form-label text-nowrap">Sort By:</label>
+          </div>
           <div class="col-4">
-            <label for="search-sort-by">Sort By:</label>
             <select id="search-sort-by" class="form-control form-select" name="sort">
               <option value="date,asc">Date</option>
               <option value="relevance,asc">Relevance</option>
             </select>
           </div>
         
-          <div class="col-2">
-            <input type="submit" value="Search">
+          <div class="col-6 mt-1 pt-0">
+            <div class="container-fluid col-4">
+            <input class="form-control my-0" type="submit" value="Let's Go!">
+            </div>
           </div>
 
         </div>
       </form> 
+
     </div>
     <br>
-    </div>
-  
+  </div>
 
-</div>
+
 <script src="/static/js/slide_show.js"></script>
 {% endblock %}

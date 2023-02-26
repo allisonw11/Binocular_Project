@@ -2,102 +2,126 @@
 {% block title %}Create New Account{% endblock %}
 
 {% block content %}
-<h1> Create New Account </h1>
-    <h3> Please Enter Your Information Below:</h3>
-    <h4> All required fields are indicated with *</h4>
-<form action="/new_account" method="POST">
-    <p>
-        * First Name: <input type="text" name="fname" placeholder="Enter first name" required>
-    </p>
+<br>
+<div id="header-box">
+    <div class="container-fluid col-11">
+        <h3><strong> Create New Account</strong></h3>
+    </div>
+</div>
 
-    <p>
-        * Last Name: <input type="text" name="lname" placeholder="Enter last name" required>
-    </p>
+<div id="header-underline">
+    <div class="container-fluid col-10">
+        <h5> Please Enter Your Information Below:</h5>
+        <p> All required fields are indicated with *</p>
+    </div>
+</div>
 
-    <p>
-        * Email: <input type="text" name="email" placeholder="Enter email address" required pattern="\w+@\w+\.\w+">
-    </p>
+<div class="container-fluid col-9">
+    <form action="/new_account" method="POST">
+        <div class="create-account-form">  
+            <p> 
+                * First Name: <input class="col-form-label text-nowrap" type="text" name="fname" placeholder="Enter first name" required>
+            </p>
+            <p>
+                * Last Name: <input type="text" name="lname" placeholder="Enter last name" required>
+            </p>
 
-    <p>
-        * Password: <input type="password" id="password" name="password" placeholder="Enter password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" 
-        required>
-        <div id="psw-message">
-            <p>Password must contain the following:</p>
-                <p id="psw-letter" class="invalid">A <b>lowercase</b> letter</p>
-                <p id="psw-capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
-                <p id="psw-number" class="invalid">A <b>number</b></p>
-                <p id="psw-length" class="invalid">Minimum <b>8 characters</b></p>
+            <p>
+                * Email: <input type="text" name="email" placeholder="Enter email address" required pattern="\w+@\w+\.\w+">
+            </p>
+
+            <p>
+                * Password: <input type="password" id="password" name="password" placeholder="Enter password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" 
+                required>
+                <div class="container-fluid col-8" id="psw-message">
+                    <p>Password must contain the following:</p>
+                        <p id="psw-letter" class="invalid">A <b>lowercase</b> letter</p>
+                        <p id="psw-capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
+                        <p id="psw-number" class="invalid">A <b>number</b></p>
+                        <p id="psw-length" class="invalid">Minimum <b>8 characters</b></p>
+                </div>
+            </p>
+        
+        <p>
+            * Address: <input type="address" name="address" placeholder="Enter address" required>
+        </p>
+        
+        <p>
+            * Zip Code: <input class="col-form-label" type="zipcode" name="zipcode" placeholder="Enter zipcode" pattern="\d{5}" required>
+        </p>
+        <div>
+            <label for="states">* Choose a state:</label>
+            <select name="states" id="states">
+                <option value="AL">Alabama</option>
+                <option value="AK">Alaska</option>
+                <option value="AZ">Arizona</option>
+                <option value="AR">Arkansas</option>
+                <option value="CA">California</option>
+                <option value="CO">Colorado</option>
+                <option value="CT">Connecticut</option>
+                <option value="DE">Delaware</option>
+                <option value="DC">District Of Columbia</option>
+                <option value="FL">Florida</option>
+                <option value="GA">Georgia</option>
+                <option value="HI">Hawaii</option>
+                <option value="ID">Idaho</option>
+                <option value="IL">Illinois</option>
+                <option value="IN">Indiana</option>
+                <option value="IA">Iowa</option>
+                <option value="KS">Kansas</option>
+                <option value="KY">Kentucky</option>
+                <option value="LA">Louisiana</option>
+                <option value="ME">Maine</option>
+                <option value="MD">Maryland</option>
+                <option value="MA">Massachusetts</option>
+                <option value="MI">Michigan</option>
+                <option value="MN">Minnesota</option>
+                <option value="MS">Mississippi</option>
+                <option value="MO">Missouri</option>
+                <option value="MT">Montana</option>
+                <option value="NE">Nebraska</option>
+                <option value="NV">Nevada</option>
+                <option value="NH">New Hampshire</option>
+                <option value="NJ">New Jersey</option>
+                <option value="NM">New Mexico</option>
+                <option value="NY">New York</option>
+                <option value="NC">North Carolina</option>
+                <option value="ND">North Dakota</option>
+                <option value="OH">Ohio</option>
+                <option value="OK">Oklahoma</option>
+                <option value="OR">Oregon</option>
+                <option value="PA">Pennsylvania</option>
+                <option value="RI">Rhode Island</option>
+                <option value="SC">South Carolina</option>
+                <option value="SD">South Dakota</option>
+                <option value="TN">Tennessee</option>
+                <option value="TX">Texas</option>
+                <option value="UT">Utah</option>
+                <option value="VT">Vermont</option>
+                <option value="VA">Virginia</option>
+                <option value="WA">Washington</option>
+                <option value="WV">West Virginia</option>
+                <option value="WI">Wisconsin</option>
+                <option value="WY">Wyoming</option>
+            </select>
         </div>
-    </p>
-    
-    <p>
-        * Address: <input type="address" name="address" placeholder="Enter address" required>
-    </p>
-    <label for="states">* Choose a state:</label>
-        <select name="states" id="states">
-            <option value="AL">Alabama</option>
-            <option value="AK">Alaska</option>
-            <option value="AZ">Arizona</option>
-            <option value="AR">Arkansas</option>
-            <option value="CA">California</option>
-            <option value="CO">Colorado</option>
-            <option value="CT">Connecticut</option>
-            <option value="DE">Delaware</option>
-            <option value="DC">District Of Columbia</option>
-            <option value="FL">Florida</option>
-            <option value="GA">Georgia</option>
-            <option value="HI">Hawaii</option>
-            <option value="ID">Idaho</option>
-            <option value="IL">Illinois</option>
-            <option value="IN">Indiana</option>
-            <option value="IA">Iowa</option>
-            <option value="KS">Kansas</option>
-            <option value="KY">Kentucky</option>
-            <option value="LA">Louisiana</option>
-            <option value="ME">Maine</option>
-            <option value="MD">Maryland</option>
-            <option value="MA">Massachusetts</option>
-            <option value="MI">Michigan</option>
-            <option value="MN">Minnesota</option>
-            <option value="MS">Mississippi</option>
-            <option value="MO">Missouri</option>
-            <option value="MT">Montana</option>
-            <option value="NE">Nebraska</option>
-            <option value="NV">Nevada</option>
-            <option value="NH">New Hampshire</option>
-            <option value="NJ">New Jersey</option>
-            <option value="NM">New Mexico</option>
-            <option value="NY">New York</option>
-            <option value="NC">North Carolina</option>
-            <option value="ND">North Dakota</option>
-            <option value="OH">Ohio</option>
-            <option value="OK">Oklahoma</option>
-            <option value="OR">Oregon</option>
-            <option value="PA">Pennsylvania</option>
-            <option value="RI">Rhode Island</option>
-            <option value="SC">South Carolina</option>
-            <option value="SD">South Dakota</option>
-            <option value="TN">Tennessee</option>
-            <option value="TX">Texas</option>
-            <option value="UT">Utah</option>
-            <option value="VT">Vermont</option>
-            <option value="VA">Virginia</option>
-            <option value="WA">Washington</option>
-            <option value="WV">West Virginia</option>
-            <option value="WI">Wisconsin</option>
-            <option value="WY">Wyoming</option>
-        </select>
-    
-    <p>
-        * Zip Code: <input type="zipcode" name="zipcode" placeholder="Enter zipcode" pattern="\d{5}" required>
-    </p>
-    
-    <p>
-      <input type="submit">
-    </p>
-    Have an account? <a href="/">Log In Here</a>
-  </form>
 
 
-  <script src="/static/js/create_acc.js"></script>
+        <br>
+        <div class="container-fluid col-4">
+            <input class="form-control mt-2" type="submit" value="Create Account">
+        </div>
+        <br>
+    </div>
+</div>
+</div>
+    </form>
+
+<br>
+<div class="container-fluid col-10">
+    Have an account?
+    <a href="/" class="btn btn-outline-success" role="button" aria-current="page">Sign In</a>
+</div>
+
+<script src="/static/js/create_acc.js"></script>
 {% endblock %}

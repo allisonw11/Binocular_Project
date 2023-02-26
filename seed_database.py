@@ -32,7 +32,6 @@ for event in events:
     event_lat = float(event['_embedded']["venues"][0]["location"]["latitude"])
     event_lng = float(event['_embedded']["venues"][0]["location"]["longitude"])
     
-    # Create a movie here and append it to movies_in_db
     db_event = crud.create_event(event_id, event_title, event_genre, event_date, event_zipcode, event_lat, event_lng)
     events_in_db.append(db_event)
 

@@ -6,7 +6,7 @@
 <br>
 <div id="header-box">
     <div class="container-fluid col-11">
-        <h3><strong>{{ user.fname +" "+ user.lname }}'s Reviews:</strong></h3>
+            <h3><strong>{{ user.fname +" "+ user.lname }}'s Reviews:</strong></h3>
     </div>
 </div>
 
@@ -25,7 +25,7 @@
                         <div id="review-box">
                             <strong>Date:</strong> {{ review.review_date.strftime('%Y-%m-%d') }}</br>
                             <strong>Event:</strong>
-                            <a href="/event/{{ review.event_id }}" class="link-dark" aria-current="page">{{ review.event.event_title }}</a></br>
+                            <a href="/event/{{ review.event_id }}" aria-current="page">{{ review.event.event_title }}</a></br>
                             <strong>Rating:</strong> {{ review.rating_score }}</br>
                             <strong>Title:</strong> {{ review.review_title }}</br>
                             <strong>Review Description:</strong></br>
@@ -44,6 +44,6 @@
     </div>
 </div>
 <div class="container-fluid col-11">
-    <a href="/view_user_reviews">Return to Top</a>
+    <a href="/view_user_reviews" class="btn btn-outline-success" role="button">Return to Top</a>
 </div>
 {% endblock %}

@@ -1,228 +1,229 @@
-<head>
-    <link ref="stylesheet" href="/static/css/styles.css">
-    <title>
-        {{ data["name"] }}
-    </title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-    <style>
-        html, body {
-        margin: 0;
-        width: 100%;
-        height: 100%;
-        }
-        .map,
-        #map {
-        width: 70%;
-        height: 70%;
-        }
-    </style>
-    
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            {{ data["name"] }}
+        </title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+        <link rel="stylesheet" href="/static/css/styles.css">
+        <style>
+            html, body {
+            margin: 0;
+            width: 95%;
+            height: 100%;
+            }
+            .map,
+            #map {
+            height: 75%;
+            margin: 0px;
+            padding:0px;
+            }
+        </style>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+    </head>
 
-</head>
-
-<body>
-    <div class="container-fluid" id="top-page">
-        <!--Row/nav bar on top of all pages-->
-        <div class="row">
-    
-          <div class="col-2">
-            <a href="/">Home(CSS home icon)</a>
-          </div>
-    
-          {% if "user" not in session %}
-            <div class="col-2">
-              <a href="/new_account">Create Account</a>
-            </div>
-          {% else %}
-            <div class="col-2">
-              <a href="/user_profile">My Profile</a>
-            </div>
+    <body>
+        <div class="container-fluid">
+            <!--Nav bar on top of all pages-->
+            <nav class="navbar navbar-expand-md d-flex justify-content-center py-3 border-bottom">
+              <div class="container-fluid">
+                  <a href="/" class="navbar-brand link-dark" aria-current="page"><strong>Home</strong></a>
+                <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" 
+                data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" 
+                aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                  <ul class="navbar-nav mb-2 mb-md-0">
+                  {% if "user" not in session %}
+                    <li class="nav-item ms-auto">
+                      <a href="/new_account" class="nav-link link-dark" aria-current="page">Create Account</a>
+                    </li>
+        
+                    <li class="nav-item ms-auto">
+                      <a href="/help" class="nav-link link-dark" aria-current="page">Q&A</a>
+                    </li>
+                  {% else %}
+                    <li class="nav-item ms-auto">
+                      <a href="/user_profile" class="nav-link link-dark" aria-current="page">Profile</a>
+                    </li>
+        
+                    <li class="nav-item ms-auto">
+                      <a href="/view_user_reviews" class="nav-link link-dark" aria-current="page">My Reviews</a>
+                    </li>
+              
+                    <li class="nav-item ms-auto">
+                      <a href="/help" class="nav-link link-dark" aria-current="page">Q&A</a>
+                    </li>
+        
+                    <li class="nav-item ms-auto">
+                      <a href="/logout" class="nav-link link-dark" aria-current="page">Logout</a>
+                    </li>
+                  {% endif %}
+                  </ul>
+                </div>
+              </div>
+            </nav>
+        
             
-            <div class="col-2">
-              <a href="/view_user_reviews">My Reviews</a>
-            </div>
-    
-            <div class="col-2">
-              <a href="/logout">Logout</a>
-            </div>
-          {% endif %}
-          
-          <div class="col-2">
-            <a href="/help">Help</a>
-          </div> 
-        </div>
-        
-          {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-              {% for category, message in messages %}
-                {% if category =="error" %}
-                  <div class="alert alert-danger alter-dismissable fade show" role="alert" >
-                  {{ message }}
-                  </div>
-                {% else %}
-                  <div class="alert alert-success alter-dismissable fade show" role="alert" >
-                  {{ message }}
-                  </div>
+              {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                  {% for category, message in messages %}
+                    {% if category =="error" %}
+                      <div class="alert alert-danger alter-dismissable fade show" role="alert" >
+                      {{ message }}
+                      </div>
+                    {% else %}
+                      <div class="alert alert-success alter-dismissable fade show" role="alert" >
+                      {{ message }}
+                      </div>
+                    {% endif %}
+                  {% endfor %}
                 {% endif %}
-              {% endfor %}
-            {% endif %}
-          {% endwith %}
+              {% endwith %}
         </div>
-    <h2>{{ data["name"] }}</h2>
-
-        <img src='{{ data["images"][4]["url"] }}'>
-
-        {% if "description" in data %}
-            <p>Event Description:</br>
-            {{ data["description"] }}</p>
-        {% elif "info" in data %}
-            <p>Event Description:</br>
-            {{ data["info"] }}</p>
-        {% endif %}
-
-        <p>Event Genre:</br>
-        {% if "classifications" in data %}
-            {{ data["classifications"][0]["genre"]["name"] }}</p>
-        {% else %}
-            Undefined.</p>
-        {% endif %}
-    
-        <p>Event Start Date:</br> 
-            {{ data["dates"]["start"]["localDate"] }} at {{ data["dates"]["start"]["localTime"]}} Local Time
-        </p>
-
-        <p>Event Location:</br> 
-            {{ event[0]["name"] }}
-        </p>
-
-        {% if "seatmap" in data %}
-            <p>Seat Map: <img src='{{ data["seatmap"]["staticUrl"] }}'></p>
-        {% endif %}
-    
-    <input type="hidden" id="map_lat" name="map-lat" value='{{ event[0]["location"]["latitude"] }}'>
-    <input type="hidden" id="map_lng" name="map-lng" value='{{ event[0]["location"]["longitude"] }}'>
-        <p>
-            Event Address: {{ event[0]["address"]["line1"] }}, {{ event[0]["city"]["name"] }}, {{ event[0]["state"]["name"] }} {{ event[0]["postalCode"]}}
-        </p>
-
-        {% if "priceRanges" in data %}
-            {% if data["priceRanges"][0]["min"] == data["priceRanges"][0]["max"] %}
-                <p>Price Range(*not including tax and fees): ${{ data["priceRanges"][0]["max"] }}</p>
-            {% else %}
-                <p>Price Range(*not including tax and fees): ${{ data["priceRanges"][0]["min"] }} - ${{ data["priceRanges"][0]["max"] }}
-            {% endif %}
-        {% endif %}
-    
-        <p>Purchase Event Ticket:</br> 
-            <a href='{{ data["url"] }}' target="_blank">Tickemaster</a>
-            {% if "outlets" in data %}
-                Or <a href='{{ data["outlets"][0]["url"] }}'>Box Office Site</a>
-            {% endif %}
-        </p>
-
-        <p>For More Information/Questions: </br>
-            {% if "ada" in data %}
-                {{ event[0]["ada"]["adaCustomCopy"] }}</p>
-            {% elif "pleaseNote" in data %}
-                {{ data["pleaseNote"] }}</p>
-            {% elif "outlets" in data %}
-                Visit <a href='{{ data["outlets"][0]["url"] }}'>{{ data["outlets"][0]["url"] }}</a></p>
-            {% else %}
-                Not available.
-            {% endif %}
-        </p>
-
-        <div id="gMap">
-            <h4>Map! (right hand side on page; Bootstrap, CSS)</h4>
-                <section class="map">
-                    <div id="map"></div>
-                </section>
-        </div>
-
-
-    {% if "user" not in session %}
-        <p>Must first sign in to get access to the reviews.
-            <a href="/new_account" target="_blank">Creat an Account</a> rr
-            <a href="/">Sign In(Pull the user back to the top nav bar at the same page)</a>
-        </p>
-    {% else %}   
-        <form action="/event/{{ event_id }}/review" id="review-form" method="POST">
-        <input type="hidden" id="event-id" name="event-id" value='{{ event_id }}'>
-            <p>Create review: (right col=6 , Bootstrap)</p>
-                <div>
-                    <label class="form-label above" for="rating">Rating: (1-5 stars)</label>
-                    <input id="rating-score" class="form-control" type="number" name="rating" min="1" max="5" placeholder="Enter rating (1-5)" required> 
-                    <!--Add CSS stars HERE-->
-                </div>
         
-                <div>
-                    <label class="form-label above" for="review-title">Review Title:</label>
-                    <input id="review-title" class="form-control" type="text" name="title" placeholder="Enter the title for this review" required> 
+        <input type="hidden" id="map_lat" name="map-lat" value='{{ event[0]["location"]["latitude"] }}'>
+        <input type="hidden" id="map_lng" name="map-lng" value='{{ event[0]["location"]["longitude"] }}'>
+        <div class="container-fluid">
+            <br>
+            <div class="container-fluid col-11">
+                <div class="row justify-content-center">
+                    <h4 align="center">{{ data["name"] }}</h4>
+                    <img id="event-img" src='{{ data["images"][4]["url"] }}'>
                 </div>
-        
-                <div>
-                    <label class="form-label above" for="review-description">Review:</label>
-                    <input id="review-description" class="form-control" type="text" name="review" rows="5" cols="50" placeholder="Enter review here" required>
-                </div>
-        
-                <div>
-                    <label class="form-label above" for="recommendation">Would you recommend this event to others?</label>
-                    <input type="radio" id="yes-no" name="recommendation" value="yes" required>
-                        <label for="yes">Yes</label>
-                    <input type="radio" id="yes-no" name="recommendation" value="no" required>
-                        <label for="no">No</label>
-                </div>
-        
-                <div class="col-3">
-                    <input type="submit" value="Submit Review" id="submit">
-                </div>
-        </form>
+            </div>
+            <br>
 
- 
-        <p>All Reviews: (Bootstrap;Left, col=6) + Rank reviews by highest rating/lowest rating/most recent date(2.0/3.0)</p>
-            {% if not reviews_in_event %}
-                <p>No written reviews yet. </p>
-            {% endif %}
-        
-            {% for review in reviews_in_event %}
-                <li type="1" class="review-list" id="full-review">
-                    <div>
-                    Written By: User {{ review.user_id }}</br>
-                    Date: {{ review.review_date }}</br>
-                    Title: <span id="title_{{ review.review_id }}">{{ review.review_title }}</span></br>
-                    Event Score: <span id="rating_{{ review.review_id }}">{{ review.rating_score }}</span></br>
-                    Description: <span id="description_{{ review.review_id }}">{{ review.review_description }}</span></br>
-                    <span id="recommend_{{ review.review_id }}">
-                        {% if review.review_recommend %}
-                        Recommendation: Yes
-                        {% else %}
-                        Recommendation: No
+            <div class="container-fluid col-10">
+                        {% if "description" in data %}
+                            <p>Description:</br>
+                                <div class="container-fluid col-12">
+                                    {{ data["description"] }}</p>
+                                </div>
+                        {% elif "info" in data %}
+                            <p>Description:</br>
+                                <div class="container-fluid col-12">
+                                    {{ data["info"] }}</p>
+                                </div>
                         {% endif %}
-                    </span>
-                    
+        
+                        {% if "classifications" in data %}
+                            <p>Genre:</br>
+                            {{ data["classifications"][0]["genre"]["name"] }}</p>
+                        {% else %}
+                            Undefined.</p>
+                        {% endif %}
+            
+                <p>Date and Time:</br>
+                    {{ data["dates"]["start"]["localDate"] }} at {{ data["dates"]["start"]["localTime"]}} Local Time
+                </p>
+        
+                <p>Venue:</br> 
+                    {{ event[0]["name"] }},
+                    {{ event[0]["address"]["line1"] }}, {{ event[0]["city"]["name"] }}, {{ event[0]["state"]["name"] }} {{ event[0]["postalCode"]}}
+                </p>
+
+                {% if "priceRanges" in data %}
+                    {% if data["priceRanges"][0]["min"] == data["priceRanges"][0]["max"] %}
+                        <p>Ticket Price Range:</br>
+                            ${{ data["priceRanges"][0]["max"] }}
+                        </p>
+                    {% else %}
+                        <p>Ticket Price Range:</br>
+                            ${{ data["priceRanges"][0]["min"] }} - ${{ data["priceRanges"][0]["max"] }}
+                    {% endif %}
+                {% endif %}
+
+                <p>Purchase Ticket:</br> 
+                    <a href='{{ data["url"] }}' target="_blank">Tickemaster</a>
+                    {% if "outlets" in data %}
+                        Or <a href='{{ data["outlets"][0]["url"] }}'>Box Office Site</a>
+                    {% endif %}
+                </p>
+                
+
+                    {% if "seatmap" in data %}
+                        <p>Seat Map:</br>
+                            <img src='{{ data["seatmap"]["staticUrl"] }}' id="seat-map">
+                        </p>
+                    {% endif %}
+
+                    <div class="map">
+                        <div id="map"></div>
+                    </div>
+
+                <p><u>For More Information/Questions:</u></br>
+                    <div class="container-fluid col-12">
+                    {% if "ada" in data %}
+                        {{ event[0]["ada"]["adaCustomCopy"] }}</p>
+                    {% elif "pleaseNote" in data %}
+                        {{ data["pleaseNote"] }}</p>
+                    {% elif "outlets" in data %}
+                        Visit <a href='{{ data["outlets"][0]["url"] }}'>{{ data["outlets"][0]["url"] }}</a></p>
+                    {% else %}
+                        Not available.
+                    {% endif %}
+                    </div>
+                </p>
+
+            </div>
+        </div>
+<br>
+
+    <div class="row justify-content-between py-3 my-4 border-top">
+        <div class="col-7">
+            <div class="container-fluid col-10">
+                <h4>All Reviews:</h4>
+                {% if not reviews_in_event %}
+                    <li>No written reviews yet. </li>
+                    <br>
+                {% endif %}
+            
+                {% for review in reviews_in_event %}
+                    <div class="g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                        <div class="container-fluid col-11 mt-3 mb-3">
+                            Written By: User {{ review.user_id }}</br>
+                            Date: {{ review.review_date.strftime('%Y-%m-%d') }}</br>
+                            Rating: <span id="rating_{{ review.review_id }}">{{ review.rating_score }}</span></br>
+                            Title: <span id="title_{{ review.review_id }}">{{ review.review_title }}</span></br>
+                            Description: 
+                                <div class="container-fluid col-12">
+                                    <span id="description_{{ review.review_id }}">{{ review.review_description }}</span></br>
+                                </div>
+                            <span id="recommend_{{ review.review_id }}">
+                                {% if review.review_recommend %}
+                                Recommendation: Yes
+                                {% else %}
+                                Recommendation: No
+                                {% endif %}
+                            </span>
+                        </div>
                     {% if session["user"]== review.user_id %}
-                        <button onClick="show_edit_form()">Edit</button>
-                    
-                        <div id="show-edit-form" hidden>
+                        <div class="container-fluid col-11 mb-3">
+                            <button class="btn btn-outline-success" onClick="show_edit_form()">Edit</button>
+                            <div id="show-edit-form" hidden>
                             <form id="edit-review-form" method="POST">
                                 <input type="hidden" id="edit-review-id" value='{{ review.review_id }}'>
                                 <input type="hidden" id="event-id" name="event-id" value='{{ event_id }}'>
+                                <br>
                                 Edit Your Review:
                                     <div>
-                                        <label class="form-label above" for="rating">Rating: (1-5 stars)</label>
+                                        <label class="form-label above" for="rating">Rating:</label>
                                         <input id="edit-rating-score" class="form-control" type="text" name="rating" placeholder="Enter rating (1-5)" required> 
                                     </div>
-                            
                                     <div>
-                                        <label class="form-label above" for="review-title">Review Title:</label>
+                                        <label class="form-label above" for="review-title">Title:</label>
                                         <input id="edit-review-title" class="form-control" type="text" name="title" placeholder="Enter the title for this review" required> 
-                                    </div>
-                            
+                                    </div>                                
                                     <div>
-                                        <label class="form-label above" for="review-description">Review:</label>
+                                        <label class="form-label above" for="review-description">Description:</label>
                                         <input id="edit-review-description" class="form-control" type="text" name="review" rows="5" cols="50" placeholder="Enter review here" required>
                                     </div>
-                            
                                     <div>
                                         <label class="form-label above" for="recommendation">Would you recommend this event to others?</label>
                                         <input type="radio" id="edit-yes-no" name="recommendation" value="true" required>
@@ -230,23 +231,81 @@
                                         <input type="radio" name="recommendation" value="false" required>
                                             <label for="no">No</label>
                                     </div>
-                            
-                                    <div class="col-3">
-                                        <input type="submit" value="Update" id="update-submit">   
-                                    </div>
+                                        <input class="btn btn-outline-success" type="submit" value="Update" id="update-submit">   
                             </form>
-                            <button id="cancel-submit">Cancel</button>
+                            <button class="btn btn-outline-success" id="cancel-submit">Cancel</button>
+                            </div>
                         </div>
                     {% endif %}
                     </div>
-            {% endfor %}
-            {% endif %}
+                {% endfor %}
+            </div>
+        </div>
 
+            <div class="col-5">
+                {% if "user" not in session %}
+                <div class="container-fluid col-10">
+                    <h4>Must first sign in to submit reviews.</h4>
+                    <li><a href="/new_account" target="_blank">Creat an Account</a> or <a href="/">Sign In</a></li>
+                <div>
+                {% else %}  
+                    <div class="container-fluid col-9">
+                        <h4>Write Your Review:</h4>
+                    </div>
+                    <div class="container-fluid col-9">
+                        <form action="/event/{{ event_id }}/review" id="review-form" method="POST">
+                        <input type="hidden" id="event-id" name="event-id" value='{{ event_id }}'>
+                            <div>
+                                <label class="form-label above" for="rating">Rating:</label>
+                                <input id="rating-score" class="form-control" type="number" name="rating" min="1" max="5" placeholder="Enter rating (1-5)" required> 
+                            </div>
+                    
+                            <div>
+                                <label class="form-label above" for="review-title">Title:</label>
+                                <input id="review-title" class="form-control" type="text" name="title" placeholder="Enter the title for this review" required> 
+                            </div>
+                    
+                            <div>
+                                <label class="form-label above" for="review-description">Description:</label>
+                                <input id="review-description" class="form-control" type="text" name="review" rows="5" cols="50" placeholder="Enter review here" required>
+                            </div>
+                    
+                            <label class="form-label above" for="recommendation">Would you recommend this event to others?</label>
+                                <input class="text-nowrap" type="radio" id="yes-no" name="recommendation" value="yes" required>
+                                <label for="yes">Yes</label>
         
+                                <input type="radio" id="yes-no" name="recommendation" value="no" required>
+                                <label for="no">No</label>
+                            
+                            <div class="col-3 mt-2">
+                                <input type="submit" value="Submit" id="submit">
+                            </div>
+                        </form>
+                    </div>
+                {% endif %}
+                </div>  
+            </div>
 
 
-    <script src="/static/js/edit_review.js"></script>
-    <script src="/static/js/gMap.js"></script>
-    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByH1t-H-7MgU-yqWU2hCAOBIDHDeQjop4&callback=initMap"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-</body>
+        </br>
+        <div class="container-fluid" id="bottom-page">
+            <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+              <div class="col-md-11 d-flex align-items-center container-fluid">
+                <a href"/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">Home
+                  <svg class="bi" width="30" height="24">
+                  <use xlink:href="#bootstrap"></use>
+                  </svg>
+                </a>
+              </div>
+        
+            </footer>
+          </div>
+
+
+        <script src="/static/js/topNav.js"></script>
+        <script src="/static/js/edit_review.js"></script>
+        <script src="/static/js/gMap.js"></script>
+        <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByH1t-H-7MgU-yqWU2hCAOBIDHDeQjop4&callback=initMap"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    </body>
+</html>
