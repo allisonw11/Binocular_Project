@@ -12,6 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e392f29cbd.js" crossorigin="anonymous"></script>
     {% block head %}
     <title>{% block title %}TITLE GOES HERE{% endblock %}</title>
     {% endblock %}
@@ -25,7 +26,7 @@
 
     <nav class="navbar navbar-expand-md d-flex justify-content-center py-3 border-bottom">
       <div class="container-fluid">
-          <a href="/" class="navbar-brand link-dark" aria-current="page"><strong>Home</strong></a>
+          <a href="/" class="navbar-brand link-dark" aria-current="page"><i class="fa-solid fa-binoculars"></i> <strong>Binocular</strong></a>
         <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" 
         data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" 
         aria-label="Toggle navigation">
@@ -35,15 +36,15 @@
           <ul class="navbar-nav mb-2 mb-md-0">
           {% if "user" not in session %}
             <li class="nav-item ms-auto">
-              <a href="/new_account" class="nav-link link-dark" aria-current="page">Create Account</a>
+              <a href="/new_account" class="nav-link link-dark" aria-current="page"><i class="fa-solid fa-plus"></i> Create Account</a>
             </li>
 
             <li class="nav-item ms-auto">
-              <a href="/help" class="nav-link link-dark" aria-current="page">Q&A</a>
+              <a href="/help" class="nav-link link-dark" aria-current="page">Help</a>
             </li>
           {% else %}
             <li class="nav-item ms-auto">
-              <a href="/user_profile" class="nav-link link-dark" aria-current="page">Profile</a>
+              <a href="/user_profile" class="nav-link link-dark" aria-current="page"><i class="fa-regular fa-user"></i> Profile</a>
             </li>
 
             <li class="nav-item ms-auto">
@@ -51,7 +52,7 @@
             </li>
       
             <li class="nav-item ms-auto">
-              <a href="/help" class="nav-link link-dark" aria-current="page">Q&A</a>
+              <a href="/help" class="nav-link link-dark" aria-current="page">Help</a>
             </li>
 
             <li class="nav-item ms-auto">
@@ -90,7 +91,7 @@
   <div class="container-fluid" id="bottom-page">
     <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
       <div class="col-md-4 d-flex align-items-center">
-        <a href"/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">Home
+        <a href"/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1"> Home
           <svg class="bi" width="30" height="24">
           <use xlink:href="#bootstrap"></use>
           </svg>

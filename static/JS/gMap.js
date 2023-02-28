@@ -22,7 +22,7 @@ function initMap() {
 
     
     const eventInfo = new google.maps.InfoWindow({
-        content: 'Here',
+        content: 'You are here!',
     });
 
     eventInfo.open(basicMap, eventMarker);

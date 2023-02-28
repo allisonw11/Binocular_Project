@@ -145,6 +145,7 @@ def all_events_result():
             "radius": radius,
             "unit": "miles",
             "sort": sort,
+            "size": "10",
             "page": page
             }
 
@@ -256,7 +257,6 @@ def edit_review():
                                         )
     db.session.add(updated_review)
     db.session.commit()
-    flash("You have updated your review.", category="success")
     return "Review has been updated."
 
 

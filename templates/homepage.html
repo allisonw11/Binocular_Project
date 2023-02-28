@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Events Homepage{% endblock %}
+{% block title %}Binocular: Find Your Next Adventure{% endblock %}
 
 {% block content %}
 {% if "user" not in session %}
@@ -29,7 +29,7 @@
     </form>
   </div>
 {% else %}
-  <h4 align="center">Events Recommendation Just For You!</h4>
+  <h4 align="center">Recommendation Just For You!</h4>
         <div class="slideshow-container">
           {% for result in results %}    
             <div align="center" class="eventSlides">
@@ -58,7 +58,8 @@
   <div id="search-section">
     <br>
     <div class="container-fluid col-8">
-      <h4 align="center"><strong>Search For Events</strong></h4>
+      <h4 align="center"><strong>Discover Your Next Adventure!</strong></h4>
+      <p align="center">From concert, broadway, to live shows that can't be miss out on...</p>
       <form action="/search">
 
         <div class="row">
@@ -70,16 +71,16 @@
 
         <div class="row">
           <div class="col-2">
-            <label for="search-zip" class="col-form-label text-nowrap">Zip Code:</label>
+            <label for="search-zip" class="col-form-label text-nowrap mt-1">Zip Code:</label>
           </div>
-          <div class="col-4">
+          <div class="col-4 mt-1">
             <input id="search-zip" class="form-control" type="text" name="zipcode" placeholder="Enter Zipcode">
           </div>
         
           <div class="col-2">
-            <label for="search-radius" class="col-form-label text-nowrap">Distance Radius:</label>
+            <label for="search-radius" class="col-form-label text-nowrap mt-1">Distance Radius:</label>
           </div>
-          <div class="col-4">
+          <div class="col-4 mt-1">
               <select class="form-control form-select mt-1" name="unit">
                 <option value="10">10 miles</option>
                 <option value="15">15 miles</option>
@@ -91,10 +92,10 @@
 
         <div class="row">
           <div class="col-2">
-            <label for="search-sort-by" class="col-form-label text-nowrap">Sort By:</label>
+            <label for="search-sort-by" class="col-form-label text-nowrap mt-1">Sort By:</label>
           </div>
           <div class="col-4">
-            <select id="search-sort-by" class="form-control form-select" name="sort">
+            <select id="search-sort-by" class="form-control form-select mt-1" name="sort">
               <option value="date,asc">Date</option>
               <option value="relevance,asc">Relevance</option>
             </select>
